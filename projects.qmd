@@ -1,37 +1,79 @@
 ---
-title: "项目记录"
+title: "Projects"
 page-layout: full
 toc: false
 ---
 
 ::: {.project-grid}
-::: {.project-card}
-[PROJECT 001]{.project-no}
 
-## ARC-AGI Reasoning
+::: {.project-card}
+[ARC PRIZE 2026]{.project-no}
+
+## ARC-AGI-2: Fit the Whale
 
 <div class="pixel-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 
-抽象推理、快速适应与程序归纳。
+[An agent and inference stack running DeepSeek-V4.1-Flash on 4×L4. 81.81, 5th on the public leaderboard.]{.en}
+[在 4×L4 上跑 DeepSeek-V4.1-Flash 的智能体与推理栈。公榜第 5（81.81）。]{.zh}
 
-[进入项目页 →](projects/arc-agi/){.retro-button}
+[[Details →]{.en}[项目页 →]{.zh}](projects/arc-agi/){.retro-button}
+[Writeup ↗](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-2/writeups/fit-the-whale-in-running-deepseek-v4-1-flash-on-4){.retro-button}
 :::
 
 ::: {.project-card}
-[PROJECT 002]{.project-no}
+[NSCSCC 2026]{.project-no}
 
-## Evidence-Guided Visual Active Search
+## [MIKU: Out-of-Order LA32R CPU]{.en}[MIKU：LA32R 乱序 CPU]{.zh}
 
-<div class="radar-art" aria-hidden="true"><span></span></div>
+<div class="chip-art" aria-hidden="true"><span>MIKU</span></div>
 
-室内 3D 环境中的细粒度、存在感知目标搜索。
-
-[进入项目页 →](projects/evas/){.retro-button}
+[Second Prize in the NSCSCC CPU design track. A three-person team built a multi-issue out-of-order core in SpinalHDL and booted Linux; I also built an MCP tool for automated FPGA deployment and hardware validation.]{.en}
+[龙芯杯 CPU 设计赛二等奖。三人团队用 SpinalHDL 写多发射乱序核并启动 Linux；我还做了自动化 FPGA 部署与硬件验证的 MCP 工具。]{.zh}
 :::
 
-::: {.project-card .construction-card}
-[PROJECT 003]{.project-no}
+::: {.project-card}
+[2025 · INDEPENDENT]{.project-no}
 
-<div class="construction-sign">🚧 建设中 🚧</div>
+## [Group-Chat Social Agent]{.en}[群聊社交智能体]{.zh}
+
+<div class="chat-art" aria-hidden="true"><span>gm!</span><span>new meme get</span><span>??</span></div>
+
+[Ran a chatbot in an online group chat for about six months. With journalism and communication students, studied how new expressions emerge, shift in meaning and spread, and designed an annotation scheme for them.]{.en}
+[在线上群聊里部署并维护聊天机器人约半年；与新闻传播专业同学合作，研究群内新说法如何出现、变义与流行，并设计标注方案。]{.zh}
 :::
+
+::: {.project-card}
+[KAGGLE · SILVER]{.project-no}
+
+## NVIDIA Nemotron Reasoning
+
+<div class="medal-art" aria-hidden="true">🥈</div>
+
+[Synthetic-data SFT for reasoning tasks, plus experiments with reinforcement learning and on-policy distillation.]{.en}
+[合成数据 SFT 提升推理题型准确率，并尝试强化学习与 on-policy 蒸馏。]{.zh}
+
+[Kaggle ↗](https://www.kaggle.com/quarkliu){.retro-button}
+:::
+
+::: {.project-card}
+[OPEN SOURCE]{.project-no}
+
+## GenAI2AgentRelay
+
+<div class="relay-art" aria-hidden="true"><b>tools</b><i>→</i><b>text</b><i>→</i><b>tools</b></div>
+
+[Converts native function-call requests into a validated plain-text action protocol, so chat-only OpenAI-compatible endpoints can still drive coding agents.]{.en}
+[把原生 function-call 请求转成经过校验的纯文本动作协议，让只会普通对话的 OpenAI 兼容接口也能驱动编程智能体。]{.zh}
+
+[GitHub ↗](https://github.com/negativegluon/genai2agent-relay){.retro-button}
+:::
+
+::: {.project-card}
+[NEXT]{.project-no}
+
+## [Next Signal]{.en}[下一个信号]{.zh}
+
+<div class="construction-sign"><span class="en">🚧 Under construction 🚧</span><span class="zh">🚧 建设中 🚧</span></div>
+:::
+
 :::

@@ -12,3 +12,4 @@ content/.music-import-readonly-root/
 
 **/*.quarto_ipynb
 /_archive/
+cv(latex).txt

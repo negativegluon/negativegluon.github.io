@@ -1,24 +1,155 @@
 ---
-title: "关于我"
+title: "About"
 toc: false
 ---
 
 ::: {.profile}
-![](assets/images/moon-mark.svg){.profile-avatar fig-alt="月兔头像"}
+![](assets/images/avatar.jpg){.profile-avatar fig-alt="Avatar: a husky smiling at the camera"}
 
 ::: {.profile-copy}
-## Quark Liu
+## [Bushi Liu]{.en}[刘补石 Bushi Liu]{.zh}
 
-AI · Reasoning · Multimodal Learning
+::: {.en}
+CS undergraduate at ShanghaiTech University, on exchange at UIUC for 2026–27.
 
-自我介绍准备中……
+Language agents · LLM post-training · Algorithm–system co-design
+:::
 
-[GitHub](https://github.com/negativegluon){.retro-button} [RSS](writing.xml){.retro-button}
+::: {.zh}
+上海科技大学计算机科学本科生，2026–27 学年在 UIUC 交换。
+
+对话与社交智能体 · LLM 后训练 · 算法–系统协同设计
+:::
+
+[GitHub](https://github.com/negativegluon){.retro-button}
+[Google Scholar](https://scholar.google.com/citations?user=vfnxkIkAAAAJ){.retro-button}
+[Kaggle](https://www.kaggle.com/quarkliu){.retro-button}
+[LinkedIn](https://www.linkedin.com/in/%E8%A1%A5%E7%9F%B3-%E5%88%98-a525a5448/){.retro-button}
+
+📮 bushil2@illinois.edu
 :::
 :::
+
+::: {.en}
+
+## Research Interests
+
+- Interactive and socially-aware language agents
+- LLM post-training: reinforcement learning, distillation, continual adaptation
+- Algorithm–system co-design for efficient inference and training
+
+## Education
+
+| School | Program | Dates |
+|---|---|---|
+| **ShanghaiTech University** | B.S. Computer Science | Expected 2028 |
+| **University of Illinois Urbana-Champaign** | Exchange student (non-degree) | Fall 2026 – Spring 2027 |
+
+## Research Experience
+
+### SWM Project <small>· 2026 · U Lab, UIUC · Research Co-Lead</small>
+
+- Lead post-training and evaluation of Qwen3-4B with GRPO for prediction-market probability forecasting.
+- Investigate market-implied belief updates as supervision for aggregate responses to real-world events, including potential transfer to interpreting individuals' beliefs.
+- Submitting to ICLR 2027.
+
+### Sign Language Translation with 3D Motion Representations <small>· 2026 · DGene Inc.</small>
+
+- Investigated SMPL-X representations and 3D motion priors for end-to-end sign language translation, adapting baseline models to test the feasibility of 3D inputs.
+- Designed probing experiments showing that intermediate motion-capture representations retain confidence-related information lost in the final decoded poses.
+- Replaced Uni-Sign's ST-GCN encoder with a motion-capture-pretrained model: with the same RGB videos and hyperparameters, it reached comparable CSL-News translation performance in fewer training steps.
+
+### SymBridge — Human–Robot Interaction <small>· 2024–2025 · Prof. Yuexin Ma's group, ShanghaiTech</small>
+
+- Contributed to the design of a human-in-the-loop cyber-physical system for human–robot interaction.
+- Led model evaluation, including task-specific evaluation metrics.
+
+## Selected Projects
+
+- **[ARC-AGI-2: Fit the Whale](projects/arc-agi/)** — agent + inference stack for DeepSeek-V4.1-Flash; 81.81, 5th on the public leaderboard (ongoing).
+- **MIKU out-of-order CPU** — NSCSCC 2026 Second Prize; multi-issue OoO core with Linux bring-up, plus an MCP tool for automated FPGA deployment.
+- **Group-chat social agent** — a chatbot run in an online group chat for six months, studying how new expressions emerge and spread.
+- **[GenAI2AgentRelay](https://github.com/negativegluon/genai2agent-relay)** — turns native tool calls into a validated plain-text action protocol.
+
+[All projects →](projects.html){.retro-button}
+
+## Publications
+
+H. Chen, Y. Xu, Y. Ren, Y. Ye, X. Li, N. Ding, Y. Wu, Y. Liu, P. Cong, Z. Wang, **Bushi Liu**, Y. Chen, Z. Dou, X. Leng, M. Li, Y. Ma, and C. Tu.
+**SymBridge: A Human-in-the-Loop Cyber-Physical Interactive System for Adaptive Human-Robot Symbiosis.**
+*SIGGRAPH Asia 2025 Conference Papers*, 2025. [[Paper]](https://doi.org/10.1145/3757377.3763915)
+
+## Honors
+
+- 🥈 **Silver Medal — Kaggle NVIDIA Nemotron Model Reasoning Challenge** (2026)
+- 🏅 **Second Prize — NSCSCC CPU Design Track** (2026)
+- 📊 **ARC Prize 2026: ARC-AGI-2** — 5th on the public leaderboard, 81.81 (ongoing)
+
+## Skills
+
+- **Languages**: Python, C, C++
+- **Frameworks / tools**: PyTorch, verl, Docker, Codex, Claude Code
+- **Methods**: LLM post-training (GRPO, forward-KL distillation, SFT), MoE pruning and low-bit quantization, speculative decoding, harness evaluation & development
+:::
+
+::: {.zh}
 
 ## 研究兴趣
 
-- 抽象推理与 ARC-AGI
-- 多模态学习与具身智能
-- 研究工程
+- 交互式、具备社会感知的语言智能体
+- LLM 后训练：强化学习、蒸馏、持续适应
+- 面向高效推理与训练的算法–系统协同设计
+
+## 教育经历
+
+| 学校 | 身份 | 时间 |
+|---|---|---|
+| **上海科技大学** | 计算机科学 本科 | 预计 2028 年毕业 |
+| **University of Illinois Urbana-Champaign** | 交换生（非学位） | 2026 秋 – 2027 春 |
+
+## 研究经历
+
+### SWM Project <small>· 2026 · U Lab, UIUC · Research Co-Lead</small>
+
+- 负责 Qwen3-4B 的 GRPO 后训练与评估，用于预测市场的概率预测。
+- 研究把市场隐含的信念更新作为监督信号，刻画群体对真实世界事件的反应，并探索迁移到理解个体信念。
+- 投稿 ICLR 2027 中。
+
+### 基于 3D 动作表示的手语翻译 <small>· 2026 · DGene Inc.</small>
+
+- 研究 SMPL-X 表示与 3D 动作先验用于端到端手语翻译，改造基线模型以评估 3D 输入的可行性。
+- 设计探针实验，发现动捕中间表示保留了最终解码姿态中丢失的置信度相关信息。
+- 用动捕预训练编码器替换 Uni-Sign 的 ST-GCN 编码器：相同 RGB 视频与超参下，在 CSL-News 上以更少训练步数达到相当的翻译效果。
+
+### SymBridge：人机交互 <small>· 2024–2025 · 马月昕老师课题组，上海科技大学</small>
+
+- 参与设计人在回路的人–机器人交互信息物理系统。
+- 负责模型评测，包括设计任务相关的评测指标。
+
+## 重点项目
+
+- **[ARC-AGI-2：Fit the Whale](projects/arc-agi/)** —— 为 DeepSeek-V4.1-Flash 搭建智能体与推理栈，公榜 81.81、第 5（比赛进行中）。
+- **MIKU 乱序 CPU** —— 龙芯杯 2026 二等奖；多发射乱序核并启动 Linux，另做了自动化 FPGA 部署的 MCP 工具。
+- **群聊社交智能体** —— 在线上群聊运行聊天机器人半年，研究新说法如何出现和流行。
+- **[GenAI2AgentRelay](https://github.com/negativegluon/genai2agent-relay)** —— 把原生工具调用转成经过校验的纯文本动作协议。
+
+[全部项目 →](projects.html){.retro-button}
+
+## 论文
+
+H. Chen, Y. Xu, Y. Ren, Y. Ye, X. Li, N. Ding, Y. Wu, Y. Liu, P. Cong, Z. Wang, **Bushi Liu**, Y. Chen, Z. Dou, X. Leng, M. Li, Y. Ma, and C. Tu.
+**SymBridge: A Human-in-the-Loop Cyber-Physical Interactive System for Adaptive Human-Robot Symbiosis.**
+*SIGGRAPH Asia 2025 Conference Papers*, 2025. [[Paper]](https://doi.org/10.1145/3757377.3763915)
+
+## 获奖
+
+- 🥈 **Kaggle NVIDIA Nemotron Model Reasoning Challenge 银牌**（2026）
+- 🏅 **全国大学生计算机系统能力大赛（龙芯杯）CPU 设计赛 二等奖**（2026）
+- 📊 **ARC Prize 2026: ARC-AGI-2** 公榜第 5（81.81，比赛进行中）
+
+## 技能
+
+- **语言**：Python、C、C++
+- **框架 / 工具**：PyTorch、verl、Docker、Codex、Claude Code
+- **方法**：LLM 后训练（GRPO、前向 KL 蒸馏、SFT）、MoE 剪枝与低比特量化、投机解码、harness 评测与开发
+:::

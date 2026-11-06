@@ -1,13 +1,13 @@
 ---
-title: "404"
+title: "Page not found"
 toc: false
 sidebar: site
 ---
 
 ::: {.not-found}
-[⚠ 信号中断 ⚠]{.not-found-title}
+[⚠ SIGNAL LOST ⚠]{.not-found-title}
 
-这个房间不存在，或者已经搬走了。
+[This room doesn't exist, or it has moved.]{.en}[这个房间不存在，或者已经搬走了。]{.zh}
 
-[返回首页](/){.retro-button}
+[[Back to home]{.en}[返回首页]{.zh}](/){.retro-button}
 :::

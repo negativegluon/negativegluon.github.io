@@ -1,0 +1,8 @@
+<ul class="log">
+<% for (const item of items) { %>
+  <li <%= metadataAttrs(item) %>>
+    <time><%= item.date %></time>
+    <% if (item.path && item.path.includes('posts/')) { %><span class="en">New post:</span><span class="zh">新文章：</span> <a href="<%- item.path %>"><%= item.title %></a><% } else if (item.zh) { %><span class="en"><%= item.title %></span><span class="zh"><%= item.zh %></span><% } else { %><%= item.title %><% } %>
+  </li>
+<% } %>
+</ul>

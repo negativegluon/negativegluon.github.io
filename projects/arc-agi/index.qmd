@@ -1,13 +1,33 @@
 ---
-title: "ARC-AGI Reasoning"
-description: "抽象推理、快速适应与程序归纳。"
-categories: [Reasoning, ARC-AGI]
+title: "ARC-AGI-2: Fit the Whale"
+description: "ARC Prize 2026 · with Mutian Hong · algorithm–system co-design for interactive reasoning"
+categories: [ARC-AGI, Kaggle, LLM Inference]
 ---
 
-## 问题
+::: {.en}
+> **81.81, 5th on the public leaderboard** (competition ongoing). Full details in the Kaggle [Technical Writeup](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-2/writeups/fit-the-whale-in-running-deepseek-v4-1-flash-on-4).
 
-## 方法
+## What we built
 
-## 实验
+An end-to-end agent and inference stack that deploys DeepSeek-V4.1-Flash on Kaggle's 4×L4 machines to solve ARC-AGI-2.
 
-## 现状
+## Highlights
+
+- **Agentic collapse after pruning 60% of routed experts**: invisible to teacher-forced NLL, but multi-turn execution broke. Protecting structural-token and single-character experts restored it.
+- **Getting accuracy back**: layer-group swap-back experiments showed the recoverable loss sat in the final 5 layers; rank-16 expert LoRAs trained with offline forward-KL distillation on a 625-task synthetic set recovered full-model accuracy.
+- **Harness and scheduling**: a multi-turn Python harness and an 80-sequence SGLang serving scheduler, pairing 100k-token budgets with pseudo-@2 dual submissions under L4 memory-bandwidth limits.
+:::
+
+::: {.zh}
+> 公榜 **81.81，第 5 名**（比赛进行中）。完整技术细节见 Kaggle 上的 [Technical Writeup](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-2/writeups/fit-the-whale-in-running-deepseek-v4-1-flash-on-4)。与 Mutian Hong 共同完成。
+
+## 做了什么
+
+在 Kaggle 的 4×L4 环境里，端到端搭建智能体与推理栈，部署 DeepSeek-V4.1-Flash 解 ARC-AGI-2。
+
+## 几个关键点
+
+- **剪掉 60% 路由专家后的"智能体崩溃"**：teacher-forced NLL 几乎看不出问题，但多轮执行会失效。保护结构 token 和单字符专家后恢复正常。
+- **把精度找回来**：分层组换回实验显示可恢复的损失集中在最后 5 层；在 625 题合成数据上，用离线前向 KL 蒸馏训练 rank-16 专家 LoRA，恢复到完整模型的准确率。
+- **harness 与调度**：多轮 Python harness，加上 80 序列的 SGLang 调度器；在 L4 显存带宽限制下，配合 100k token 预算与伪 @2 双提交。
+:::

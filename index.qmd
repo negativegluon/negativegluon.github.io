@@ -1,60 +1,70 @@
 ---
-title: "首页"
+title: "Home"
 page-layout: full
 toc: false
 listing:
-  contents: posts
-  sort: "date desc"
-  type: default
-  max-items: 5
-  fields: [date, title, description, categories]
-  feed: true
+  - id: log
+    contents: [posts, updates.yml]
+    sort: "date desc"
+    max-items: 30
+    date-format: "YYYY.MM.DD"
+    template: _log.ejs
+  - id: recent
+    contents: posts
+    sort: "date desc"
+    type: default
+    max-items: 5
+    fields: [date, title, description, categories]
+    feed: true
 ---
 
-```{=html}
-<div class="home">
+::: {.home}
 
-<p class="visitor-line">你是第 <span class="visitor-count" data-start="1337">001337</span> 位访客！</p>
+<p class="visitor-line"><span class="en">You are visitor</span><span class="zh">你是第</span> <span class="visitor-count" data-start="1337">001337</span> <span class="en">!</span><span class="zh">位访客！</span></p>
 
-<div class="home-top">
-  <figure class="win art-win">
-    <div class="win-bar"><span></span><i class="win-btns" aria-hidden="true"></i></div>
-    <img src="assets/images/yachiyo-room.png" alt="蓝色海底，白色的兔形生物坐在珊瑚旁，头顶的对话气泡写着房间名。">
-  </figure>
+::: {.home-top}
+<figure class="win art-win">
+<div class="win-bar"><span></span><i class="win-btns" aria-hidden="true"></i></div>
+<img src="assets/images/yachiyo-room.png" alt="A white bunny-like creature sitting by coral under the sea, with a speech bubble naming the room.">
+</figure>
 
-  <div class="home-side">
-    <section class="win log-win" aria-label="更新记录">
-      <div class="win-bar"><span>更新记录.txt</span><i class="win-btns" aria-hidden="true"></i></div>
-      <ul class="log">
-        <li><time>2026.11.06</time> 网站重新装修完成，换上了新的墙纸。</li>
-        <li><time>2026.08.27</time> 月面通信室开张。</li>
-      </ul>
-    </section>
-    <div class="clap-area">
-      <button class="web-clap" type="button">☆ Web拍手 ☆</button>
-      <span class="clap-result" aria-live="polite"></span>
-    </div>
-  </div>
+::: {.home-side}
+::: {.win .log-win}
+<div class="win-bar"><span><span class="en">updates.txt</span><span class="zh">更新记录.txt</span></span><i class="win-btns" aria-hidden="true"></i></div>
+
+::: {#log}
+:::
+:::
+
+<div class="clap-area">
+<button class="web-clap" type="button"><span class="en">☆ Web Clap ☆</span><span class="zh">☆ Web拍手 ☆</span></button>
+<span class="clap-result" aria-live="polite"></span>
 </div>
+:::
+:::
 
 <section class="notice">
-  <h2>◆站长公告◆</h2>
-  <p>欢迎来到 <b>Quark 的月面通信室</b>！</p>
-  <p>自我介绍、简历和文章正在陆续搬进来，常来看看哦。</p>
-  <p class="blink-soft">★ 本站链接自由，欢迎收藏 ★</p>
+<h2><span class="en">◆ Notice ◆</span><span class="zh">◆站长公告◆</span></h2>
+<p class="en">Welcome to <b>Quark's Lunar Room</b>!</p>
+<p class="zh">欢迎来到 <b>Quark 的月面通信室</b>！</p>
+<p class="en">Notes, projects and a bit of everyday life are moving in. Drop by again sometime.</p>
+<p class="zh">笔记、项目和一点日常正在陆续搬进来，常来看看哦。</p>
+<p class="blink-soft"><span class="en">★ Link freely — bookmarks welcome ★</span><span class="zh">★ 本站链接自由，欢迎收藏 ★</span></p>
 </section>
 
 <table class="directory">
-  <thead><tr><th>房间</th><th>内容</th></tr></thead>
-  <tbody>
-    <tr><td><a href="about.html">关于我</a></td><td>自我介绍、简历与联系方式</td></tr>
-    <tr><td><a href="writing.html">博客文章</a> <span class="new">NEW!</span></td><td>学习笔记、研究日志与随笔</td></tr>
-    <tr><td><a href="projects.html">项目记录</a></td><td>正在做和做过的项目</td></tr>
-    <tr><td><a href="writing.xml">RSS</a></td><td>订阅文章更新</td></tr>
-  </tbody>
+<thead><tr><th><span class="en">Room</span><span class="zh">房间</span></th><th><span class="en">What's inside</span><span class="zh">内容</span></th></tr></thead>
+<tbody>
+<tr><td><a href="about.html"><span class="en">About</span><span class="zh">关于我</span></a></td><td><span class="en">Bio, CV and contact</span><span class="zh">自我介绍、简历与联系方式</span></td></tr>
+<tr><td><a href="writing.html"><span class="en">Blog</span><span class="zh">博客文章</span></a> <span class="new">NEW!</span></td><td><span class="en">Study notes, research logs and essays</span><span class="zh">学习笔记、研究日志与随笔</span></td></tr>
+<tr><td><a href="projects.html"><span class="en">Projects</span><span class="zh">项目记录</span></a></td><td><span class="en">Things I'm building and have built</span><span class="zh">正在做和做过的项目</span></td></tr>
+<tr><td><a href="writing.xml">RSS</a></td><td><span class="en">Subscribe to new posts</span><span class="zh">订阅文章更新</span></td></tr>
+</tbody>
 </table>
 
-<h2 class="section-title">最新文章</h2>
+<h2 class="section-title"><span class="en">Latest Posts</span><span class="zh">最新文章</span></h2>
 
-</div>
-```
+::: {#recent}
+:::
+
+:::

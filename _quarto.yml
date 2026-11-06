@@ -8,12 +8,12 @@ project:
   resources:
     - /assets/**
 
-lang: zh
+lang: en
 
 website:
-  title: "Quark 的月面通信室"
-  site-url: "https://PositiveQuark.github.io"
-  description: "Quark 的个人主页与博客。"
+  title: "Quark's Lunar Room"
+  site-url: "https://negativegluon.github.io"
+  description: "Personal homepage and blog of Bushi Liu."
   favicon: assets/images/moon-mark.svg
   open-graph: true
   search: false
@@ -25,21 +25,27 @@ website:
     title: "☽QUARK☾の部屋"
     logo: assets/images/moon-mark.svg
     contents:
-      - text: "◆首页"
+      - text: "◆Home"
         href: index.qmd
-      - text: "◆关于我"
+      - text: "◆About"
         href: about.qmd
-      - text: "◆博客文章"
+      - text: "◆Blog"
         href: writing.qmd
-      - text: "◆项目记录"
+      - text: "◆Projects"
         href: projects.qmd
   page-footer:
-    left: "© 2026 Quark Liu"
+    left: "© 2026 Bushi Liu"
     center:
       - text: "RSS"
         href: writing.xml
       - text: "GitHub"
         href: https://github.com/negativegluon
+      - text: "Scholar"
+        href: https://scholar.google.com/citations?user=vfnxkIkAAAAJ
+      - text: "Kaggle"
+        href: https://www.kaggle.com/quarkliu
+      - text: "LinkedIn"
+        href: https://www.linkedin.com/in/%E8%A1%A5%E7%9F%B3-%E5%88%98-a525a5448/
     right: "Since 2026 · Best viewed with any browser"
 
 execute:
@@ -49,8 +55,9 @@ format:
   html:
     theme: default
     toc: true
-    toc-title: "本页导航"
+    toc-title: "On this page"
     code-copy: true
     anchor-sections: true
     css: assets/css/retro.css
+    include-in-header: includes/head.html
     include-after-body: includes/after-body.html

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>月面编辑室</title>
+<style>
+  :root { --ink: #1d3f63; --sky: #7fd6dc; --deep: #3b9cba; --paper: #fffbe8; --cream: #fff3b8; --pink: #ef4c72; }
+  * { box-sizing: border-box; }
+  body { margin: 0; height: 100vh; display: flex; flex-direction: column; color: var(--ink);
+         font: 14px "Microsoft YaHei", "PingFang SC", sans-serif; background: var(--sky); }
+  header { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 12px;
+           background: var(--cream); border-bottom: 4px double #d39b2a; }
+  header b { margin-right: 8px; }
+  button, select, input { font: inherit; color: var(--ink); }
+  button { padding: 3px 10px; cursor: pointer; background: linear-gradient(#fffef4, #f7ebb8); border: 2px outset #e3d08c; }
+  button:active { border-style: inset; }
+  button.primary { color: #fff; background: var(--deep); border-color: #8fdbe6; }
+  select, input { padding: 3px 6px; background: #fffef6; border: 2px inset #d9c88c; }
+  #status { margin-left: auto; font-size: 12px; }
+  #status.dirty { color: var(--pink); font-weight: 700; }
+  main { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; min-height: 0; }
+  .pane { display: flex; flex-direction: column; min-height: 0; background: var(--paper); border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(29,63,99,.2); }
+  .bar { padding: 3px 10px; color: #fff; font: 700 12px Consolas, monospace; background: linear-gradient(90deg, var(--deep), #8fdbe6); border-bottom: 2px solid var(--ink); }
+  textarea { flex: 1; width: 100%; padding: 12px; border: 0; resize: none; outline: none; font: 14px/1.6 Consolas, "Microsoft YaHei", monospace; background: transparent; color: var(--ink); }
+  textarea.drop { background: #fff7c2; }
+  iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+  #ai { display: none; gap: 8px; align-items: center; padding: 8px 12px; background: #e9fbf6; border-bottom: 1px dashed var(--deep); }
+  #ai.open { display: flex; flex-wrap: wrap; }
+  #ai input { flex: 1; min-width: 240px; }
+  #ai small { width: 100%; color: #557489; }
+  dialog { border: 3px double var(--ink); background: var(--paper); }
+  dialog label { display: block; margin: 6px 0; }
+</style>
+</head>
+<body>
+<header>
+  <b>☽ 月面编辑室</b>
+  <select id="file"></select>
+  <button id="new">＋ 新文章</button>
+  <button id="save" class="primary">保存 (Ctrl+S)</button>
+  <button id="draft" hidden></button>
+  <button id="image">插入图片</button>
+  <button id="aiToggle">AI 协作</button>
+  <span id="status"></span>
+</header>
+<div id="ai">
+  <input id="ask" placeholder="想让 AI 做什么？例如：把这篇整理成中英双语，语气轻松一点">
+  <button id="copyPrompt">① 复制提示词</button>
+  <button id="pasteResult">② 粘贴 AI 结果</button>
+  <button id="undo" disabled>撤销粘贴</button>
+  <small>把提示词粘贴给任意 AI（网页版即可），再复制它返回的完整文件内容，点②替换编辑区。保存前可以先在右侧看效果。</small>
+</div>
+<main>
+  <section class="pane"><div class="bar" id="fileBar">source</div><textarea id="text" spellcheck="false"></textarea></section>
+  <section class="pane"><div class="bar">preview（保存后自动刷新）</div><iframe id="preview"></iframe></section>
+</main>
+<input type="file" id="picker" accept="image/*" hidden>
+<dialog id="newDialog">
+  <form method="dialog">
+    <label>文件夹名（网址的一部分，小写英文和连字符）<br><input id="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*"></label>
+    <label>标题<br><input id="title"></label>
+    <button value="ok" class="primary">创建</button> <button value="cancel" formnovalidate>取消</button>
+  </form>
+</dialog>
+<script>
+const $ = (id) => document.getElementById(id);
+const text = $('text');
+let files = [], current = null, saved = '', beforePaste = null, previewPort = 4321;
+
+const api = async (path, opts) => {
+  const res = await fetch(path, opts);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || res.status);
+  return data;
+};
+const status = (msg, dirty = false) => { $('status').textContent = msg; $('status').className = dirty ? 'dirty' : ''; };
+const isDirty = () => text.value !== saved;
+
+async function loadList(select) {
+  const data = await api('/api/files');
+  files = data.files; previewPort = data.previewPort;
+  $('file').innerHTML = files.map((f) => `<option value="${f.path}">${f.path}</option>`).join('');
+  await open(select || files[0].path);
+}
+
+async function open(path) {
+  if (current && isDirty() && !window.confirm('当前文件还没保存，确定切换？')) { $('file').value = current; return; }
+  const { content } = await api('/api/file?path=' + encodeURIComponent(path));
+  current = path; saved = text.value = content; beforePaste = null; $('undo').disabled = true;
+  $('file').value = path; $('fileBar').textContent = path;
+  $('preview').src = `http://${location.hostname}:${previewPort}/${files.find((f) => f.path === path).preview}`;
+  updateDraft(); status('已打开');
+}
+
+async function save() {
+  await api('/api/file', { method: 'POST', body: JSON.stringify({ path: current, content: text.value }) });
+  saved = text.value; updateDraft(); status('已保存 ' + new Date().toLocaleTimeString());
+  setTimeout(() => { try { $('preview').contentWindow.location.reload(); } catch { $('preview').src = $('preview').src; } }, 2500);
+}
+
+function updateDraft() {
+  const m = text.value.match(/^draft:\s*(true|false)\s*$/m);
+  $('draft').hidden = !m || !current.startsWith('posts/');
+  if (m) $('draft').textContent = m[1] === 'true' ? '草稿 → 点击发布' : '已发布 → 改回草稿';
+}
+
+$('draft').onclick = () => {
+  text.value = text.value.replace(/^draft:\s*(true|false)\s*$/m, (_, v) => `draft: ${v === 'true' ? 'false' : 'true'}`);
+  updateDraft(); status('未保存', true);
+};
+
+text.addEventListener('input', () => { updateDraft(); status(isDirty() ? '未保存' : '', isDirty()); });
+$('file').onchange = () => open($('file').value);
+$('save').onclick = () => save().catch((e) => status('保存失败：' + e.message, true));
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); $('save').click(); }
+});
+window.addEventListener('beforeunload', (e) => { if (isDirty()) e.preventDefault(); });
+
+$('new').onclick = () => { $('slug').value = ''; $('title').value = ''; $('newDialog').showModal(); };
+$('newDialog').addEventListener('close', async () => {
+  if ($('newDialog').returnValue !== 'ok') return;
+  try {
+    const { path } = await api('/api/new-post', { method: 'POST', body: JSON.stringify({ slug: $('slug').value, title: $('title').value }) });
+    await loadList(path);
+  } catch (e) { status('创建失败：' + e.message, true); }
+});
+
+// 图片：选择或拖进编辑区，存到当前文件所在目录，并插入 Markdown
+async function upload(file) {
+  const { name } = await api(`/api/upload?file=${encodeURIComponent(current)}&name=${encodeURIComponent(file.name)}`, { method: 'POST', body: file });
+  const snippet = `![${name.replace(/\.[^.]+$/, '')}](${name})`;
+  text.setRangeText(snippet, text.selectionStart, text.selectionEnd, 'end');
+  text.dispatchEvent(new Event('input'));
+}
+$('image').onclick = () => $('picker').click();
+$('picker').onchange = () => { if ($('picker').files[0]) upload($('picker').files[0]).catch((e) => status(e.message, true)); };
+text.addEventListener('dragover', (e) => { e.preventDefault(); text.classList.add('drop'); });
+text.addEventListener('dragleave', () => text.classList.remove('drop'));
+text.addEventListener('drop', (e) => {
+  e.preventDefault(); text.classList.remove('drop');
+  [...e.dataTransfer.files].filter((f) => f.type.startsWith('image/')).forEach((f) => upload(f).catch((err) => status(err.message, true)));
+});
+
+// AI 协作：编辑器不调用 AI，只负责拼提示词和接收结果
+$('aiToggle').onclick = () => $('ai').classList.toggle('open');
+$('copyPrompt').onclick = async () => {
+  const guide = (await api('/api/file?path=WRITING.md')).content;
+  const prompt = [
+    '你在帮我编辑个人网站（Quarto）上的一个文件。请先读写作规范，再按我的要求修改。',
+    '只返回修改后的完整文件内容，不要加解释，不要用代码块包裹。',
+    '', '## 写作规范', guide,
+    '', `## 我的要求`, $('ask').value || '（检查并润色，保持事实不变）',
+    '', `## 当前文件：${current}`, text.value,
+  ].join('\n');
+  await navigator.clipboard.writeText(prompt);
+  status('提示词已复制');
+};
+$('pasteResult').onclick = async () => {
+  let result = (await navigator.clipboard.readText()).trim();
+  result = result.replace(/^```[a-z]*\n([\s\S]*)\n```$/, '$1');
+  if (!result) return status('剪贴板是空的', true);
+  beforePaste = text.value; text.value = result + '\n'; $('undo').disabled = false;
+  text.dispatchEvent(new Event('input'));
+};
+$('undo').onclick = () => { text.value = beforePaste; beforePaste = null; $('undo').disabled = true; text.dispatchEvent(new Event('input')); };
+
+loadList().catch((e) => status('读取失败：' + e.message, true));
+</script>
+</body>
+</html>

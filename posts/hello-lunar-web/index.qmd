@@ -1,11 +1,19 @@
 ---
-title: "你好，月面通信室"
-description: "开张第一篇。"
+title: "Hello, Lunar Room"
+description: "The first post. / 开张第一篇。"
 date: 2026-08-27
-categories: [随笔]
+categories: [Essay]
 image: cover.svg
 ---
 
-这里是 Quark 的个人主页兼博客，之后会在这里放学习笔记、研究日志和一些随笔。
+::: {.en}
+This is my personal homepage and blog. Study notes, research logs and the occasional essay will show up here.
+
+You can follow new posts via [RSS](../../writing.xml).
+:::
+
+::: {.zh}
+这里是我的个人主页兼博客，之后会在这里放学习笔记、研究日志和一些随笔。
 
 可以通过 [RSS](../../writing.xml) 订阅更新。
+:::
