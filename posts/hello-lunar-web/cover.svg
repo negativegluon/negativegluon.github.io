@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="月兔坐在旧电脑前向弯月发送信号">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f4f7a"/>
+      <stop offset=".6" stop-color="#3f97b5"/>
+      <stop offset="1" stop-color="#8fe0dc"/>
+    </linearGradient>
+    <pattern id="stars" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M60 46l3 11 11 3-11 3-3 11-3-11-11-3 11-3z" fill="#fffbe0" opacity=".7"/>
+      <circle cx="14" cy="20" r="2.5" fill="#fff"/><circle cx="100" cy="98" r="2" fill="#bff7f0"/>
+    </pattern>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="2" fill="#000" opacity=".18"/></pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <rect width="1600" height="620" fill="url(#stars)"/>
+  <path d="M1155 120A190 190 0 1 0 1395 395A165 165 0 0 1 1155 120Z" fill="#fff3b8" stroke="#163a5e" stroke-width="12" stroke-linejoin="round"/>
+  <circle cx="1105" cy="250" r="20" fill="#f3dc8a"/><circle cx="1150" cy="400" r="13" fill="#f3dc8a"/>
+  <path d="M0 720c180-60 360-60 540-10s380 60 560 0 340-60 500-20v210H0z" fill="#f6e3a6"/>
+  <path d="M0 760c200-40 380-30 560 10s400 40 600-10 320-30 440 0v140H0z" fill="#efd28a"/>
+  <g fill="none" stroke-linecap="round" stroke-width="14">
+    <path d="M90 760q-10-90 25-160q15 80 50 130q10-80 55-125q-15 85 10 155" stroke="#ef4c72"/>
+    <path d="M1420 760q-8-80 20-135q18 60 46 105q6-50 30-90" stroke="#f08a3a"/>
+  </g>
+  <g transform="translate(250 380)">
+    <rect width="500" height="330" rx="22" fill="#fff6cf" stroke="#163a5e" stroke-width="14"/>
+    <rect x="40" y="38" width="420" height="214" rx="10" fill="#173f63" stroke="#163a5e" stroke-width="10"/>
+    <text x="72" y="130" font-family="Consolas, 'Courier New', monospace" font-size="54" font-weight="bold" fill="#7af5d6">HELLO,</text>
+    <text x="72" y="200" font-family="Consolas, 'Courier New', monospace" font-size="54" font-weight="bold" fill="#7af5d6">MOON_</text>
+    <rect x="40" y="38" width="420" height="214" rx="10" fill="url(#scan)"/>
+    <circle cx="430" cy="290" r="10" fill="#4fd18b"/>
+    <rect x="180" y="330" width="140" height="56" fill="#ead893" stroke="#163a5e" stroke-width="14"/>
+    <rect x="90" y="386" width="320" height="34" rx="6" fill="#fff6cf" stroke="#163a5e" stroke-width="14"/>
+  </g>
+  <g transform="translate(770 520)" stroke="#163a5e" stroke-width="10" stroke-linejoin="round">
+    <path d="M40 120c-14-40-16-96 0-104 18-8 30 40 34 86" fill="#fffdf4"/>
+    <path d="M118 116c12-42 10-96-6-100-16-4-26 44-26 84" fill="#fffdf4"/>
+    <path d="M0 200c0-52 40-86 90-86s90 34 90 86c0 22-18 30-90 30S0 222 0 200z" fill="#fffdf4"/>
+    <circle cx="62" cy="168" r="8" fill="#163a5e" stroke="none"/><circle cx="118" cy="168" r="8" fill="#163a5e" stroke="none"/>
+    <ellipse cx="44" cy="190" rx="12" ry="7" fill="#ffb3c7" stroke="none"/><ellipse cx="136" cy="190" rx="12" ry="7" fill="#ffb3c7" stroke="none"/>
+  </g>
+  <path d="M760 470C880 330 990 290 1110 300" fill="none" stroke="#fff59f" stroke-width="10" stroke-dasharray="4 26" stroke-linecap="round"/>
+  <g fill="#fff59f"><circle cx="830" cy="400" r="10"/><circle cx="930" cy="335" r="13"/><circle cx="1035" cy="302" r="9"/></g>
+</svg>

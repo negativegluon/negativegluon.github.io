@@ -1,0 +1,13 @@
+---
+title: "404"
+toc: false
+sidebar: site
+---
+
+::: {.not-found}
+[⚠ 信号中断 ⚠]{.not-found-title}
+
+这个房间不存在，或者已经搬走了。
+
+[返回首页](/){.retro-button}
+:::

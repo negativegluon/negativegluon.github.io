@@ -1,0 +1,60 @@
+---
+title: "首页"
+page-layout: full
+toc: false
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  max-items: 5
+  fields: [date, title, description, categories]
+  feed: true
+---
+
+```{=html}
+<div class="home">
+
+<p class="visitor-line">你是第 <span class="visitor-count" data-start="1337">001337</span> 位访客！</p>
+
+<div class="home-top">
+  <figure class="win art-win">
+    <div class="win-bar"><span></span><i class="win-btns" aria-hidden="true"></i></div>
+    <img src="assets/images/yachiyo-room.png" alt="蓝色海底，白色的兔形生物坐在珊瑚旁，头顶的对话气泡写着房间名。">
+  </figure>
+
+  <div class="home-side">
+    <section class="win log-win" aria-label="更新记录">
+      <div class="win-bar"><span>更新记录.txt</span><i class="win-btns" aria-hidden="true"></i></div>
+      <ul class="log">
+        <li><time>2026.11.06</time> 网站重新装修完成，换上了新的墙纸。</li>
+        <li><time>2026.08.27</time> 月面通信室开张。</li>
+      </ul>
+    </section>
+    <div class="clap-area">
+      <button class="web-clap" type="button">☆ Web拍手 ☆</button>
+      <span class="clap-result" aria-live="polite"></span>
+    </div>
+  </div>
+</div>
+
+<section class="notice">
+  <h2>◆站长公告◆</h2>
+  <p>欢迎来到 <b>Quark 的月面通信室</b>！</p>
+  <p>自我介绍、简历和文章正在陆续搬进来，常来看看哦。</p>
+  <p class="blink-soft">★ 本站链接自由，欢迎收藏 ★</p>
+</section>
+
+<table class="directory">
+  <thead><tr><th>房间</th><th>内容</th></tr></thead>
+  <tbody>
+    <tr><td><a href="about.html">关于我</a></td><td>自我介绍、简历与联系方式</td></tr>
+    <tr><td><a href="writing.html">博客文章</a> <span class="new">NEW!</span></td><td>学习笔记、研究日志与随笔</td></tr>
+    <tr><td><a href="projects.html">项目记录</a></td><td>正在做和做过的项目</td></tr>
+    <tr><td><a href="writing.xml">RSS</a></td><td>订阅文章更新</td></tr>
+  </tbody>
+</table>
+
+<h2 class="section-title">最新文章</h2>
+
+</div>
+```

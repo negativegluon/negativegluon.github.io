@@ -1,0 +1,13 @@
+---
+title: "ARC-AGI Reasoning"
+description: "抽象推理、快速适应与程序归纳。"
+categories: [Reasoning, ARC-AGI]
+---
+
+## 问题
+
+## 方法
+
+## 实验
+
+## 现状

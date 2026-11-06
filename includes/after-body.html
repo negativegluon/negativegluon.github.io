@@ -1,0 +1,19 @@
+<script>
+  // 以样式表地址推出站点根目录，子目录页面也能找到脚本
+  (() => {
+    const css = document.querySelector('link[href*="assets/css/retro.css"]');
+    const root = new URL('../../', css ? css.href : location.href).href;
+
+    // 关闭搜索后 Quarto 不再输出这个 meta，文章页的分类标签链接要靠它
+    if (!document.querySelector('meta[name="quarto:offset"]')) {
+      const meta = document.createElement('meta');
+      meta.name = 'quarto:offset';
+      meta.content = root;
+      document.head.appendChild(meta);
+    }
+
+    const s = document.createElement('script');
+    s.src = root + 'assets/js/site.js';
+    document.body.appendChild(s);
+  })();
+</script>

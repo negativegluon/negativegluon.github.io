@@ -1,0 +1,11 @@
+---
+title: "你好，月面通信室"
+description: "开张第一篇。"
+date: 2026-08-27
+categories: [随笔]
+image: cover.svg
+---
+
+这里是 Quark 的个人主页兼博客，之后会在这里放学习笔记、研究日志和一些随笔。
+
+可以通过 [RSS](../../writing.xml) 订阅更新。

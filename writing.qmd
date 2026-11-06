@@ -1,0 +1,15 @@
+---
+title: "博客文章"
+page-layout: full
+toc: false
+listing:
+  contents: posts
+  sort: "date desc"
+  type: grid
+  grid-columns: 3
+  fields: [image, date, title, description, categories]
+  categories: true
+  sort-ui: false
+  filter-ui: true
+  feed: true
+---

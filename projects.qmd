@@ -1,0 +1,37 @@
+---
+title: "项目记录"
+page-layout: full
+toc: false
+---
+
+::: {.project-grid}
+::: {.project-card}
+[PROJECT 001]{.project-no}
+
+## ARC-AGI Reasoning
+
+<div class="pixel-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+抽象推理、快速适应与程序归纳。
+
+[进入项目页 →](projects/arc-agi/){.retro-button}
+:::
+
+::: {.project-card}
+[PROJECT 002]{.project-no}
+
+## Evidence-Guided Visual Active Search
+
+<div class="radar-art" aria-hidden="true"><span></span></div>
+
+室内 3D 环境中的细粒度、存在感知目标搜索。
+
+[进入项目页 →](projects/evas/){.retro-button}
+:::
+
+::: {.project-card .construction-card}
+[PROJECT 003]{.project-no}
+
+<div class="construction-sign">🚧 建设中 🚧</div>
+:::
+:::

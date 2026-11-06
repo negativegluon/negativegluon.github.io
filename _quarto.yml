@@ -1,0 +1,56 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+    - "posts/**/*.qmd"
+    - "projects/**/*.qmd"
+  resources:
+    - /assets/**
+
+lang: zh
+
+website:
+  title: "Quark 的月面通信室"
+  site-url: "https://PositiveQuark.github.io"
+  description: "Quark 的个人主页与博客。"
+  favicon: assets/images/moon-mark.svg
+  open-graph: true
+  search: false
+  back-to-top-navigation: true
+  page-navigation: true
+  sidebar:
+    id: site
+    style: docked
+    title: "☽QUARK☾の部屋"
+    logo: assets/images/moon-mark.svg
+    contents:
+      - text: "◆首页"
+        href: index.qmd
+      - text: "◆关于我"
+        href: about.qmd
+      - text: "◆博客文章"
+        href: writing.qmd
+      - text: "◆项目记录"
+        href: projects.qmd
+  page-footer:
+    left: "© 2026 Quark Liu"
+    center:
+      - text: "RSS"
+        href: writing.xml
+      - text: "GitHub"
+        href: https://github.com/negativegluon
+    right: "Since 2026 · Best viewed with any browser"
+
+execute:
+  freeze: auto
+
+format:
+  html:
+    theme: default
+    toc: true
+    toc-title: "本页导航"
+    code-copy: true
+    anchor-sections: true
+    css: assets/css/retro.css
+    include-after-body: includes/after-body.html

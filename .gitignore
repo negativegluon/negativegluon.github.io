@@ -1,0 +1,14 @@
+/.quarto/
+/_site/
+/.venv/
+__pycache__/
+*.pyc
+.DS_Store
+*:Zone.Identifier
+content/.music-import-readonly-root/
+新建 文本文档.txt
+
+
+
+**/*.quarto_ipynb
+/_archive/
