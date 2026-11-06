@@ -65,4 +65,4 @@ draft: true             # 写完改成 false 才会发布
 
 1. `python scripts/editor.py` 打开编辑器（或直接改文件，`quarto preview` 看效果）。
 2. 写完把 `draft` 改成 `false`，保存。
-3. `git add` → `git commit` → `git push`，GitHub Actions 自动发布。
+3. `git add` → `git commit` → `git push` 保存源码，再运行 `quarto publish gh-pages --no-prompt` 发布网站。

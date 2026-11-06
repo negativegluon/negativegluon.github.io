@@ -1,6 +1,6 @@
 # Quark 的月面通信室
 
-用 Quarto 搭的个人主页 + 博客，推送到 `main` 后由 GitHub Actions 发布到 GitHub Pages。
+用 Quarto 搭的个人主页 + 博客：https://negativegluon.github.io
 
 ## 本地预览
 
@@ -29,3 +29,14 @@ python scripts/editor.py
 | `assets/css/retro.css` | 全站样式 |
 | `assets/js/site.js` | 中英切换、站内无刷新跳转（BGM 不中断）、访客计数、拍手、BGM 播放器（曲目列表在文件开头） |
 | `assets/images/`、`assets/music/` | 图片与配乐 |
+
+## 发布
+
+```bash
+git add -A && git commit -m "..." && git push        # 保存源码
+quarto publish gh-pages --no-prompt                  # 本地构建并发布网站
+```
+
+GitHub Pages 直接托管 `gh-pages` 分支（由 `quarto publish` 生成，不要手动改）。
+`.github/workflows/publish.yml` 是 Actions 自动发布方案，目前因账户的 billing 锁定无法运行；
+恢复后可在仓库 Settings → Pages 把来源改回 GitHub Actions，就不用手动 publish 了。
