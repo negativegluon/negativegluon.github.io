@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Quark&#39;s Lunar Room</title>
+<link>https://negativegluon.github.io/</link>
+<atom:link href="https://negativegluon.github.io/index.xml" rel="self" type="application/rss+xml"/>
+<description>Personal homepage and blog of Bushi Liu.</description>
+<generator>quarto-1.7.32</generator>
+<lastBuildDate>Thu, 27 Aug 2026 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Hello, Lunar Room</title>
+  <dc:creator>Bushi Liu</dc:creator>
+  <link>https://negativegluon.github.io/posts/hello-lunar-web/</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="en">
+<p>This is my personal homepage and blog. Study notes, research logs and the occasional essay will show up here.</p>
+<p>You can follow new posts via <a href="../../writing.xml">RSS</a>.</p>
+</div>
+<div class="zh">
+<p>这里是我的个人主页兼博客，之后会在这里放学习笔记、研究日志和一些随笔。</p>
+<p>可以通过 <a href="../../writing.xml">RSS</a> 订阅更新。</p>
+</div>
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>Essay</category>
+  <guid>https://negativegluon.github.io/posts/hello-lunar-web/</guid>
+  <pubDate>Thu, 27 Aug 2026 05:00:00 GMT</pubDate>
+  <media:content url="https://negativegluon.github.io/posts/hello-lunar-web/cover.svg" medium="image" type="image/svg+xml"/>
+</item>
+</channel>
+</rss>

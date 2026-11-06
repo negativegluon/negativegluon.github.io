@@ -1,0 +1,294 @@
+[
+  {
+    "objectID": "writing.html",
+    "href": "writing.html",
+    "title": "Blog",
+    "section": "",
+    "text": "Hello, Lunar Room\n\n\n\nEssay\n\n\n\nThe first post. / 开张第一篇。\n\n\n\nAug 27, 2026\n\n\n\n\n\n\nNo matching items\n Back to top",
+    "crumbs": [
+      "◆Blog"
+    ]
+  },
+  {
+    "objectID": "projects.html",
+    "href": "projects.html",
+    "title": "Projects",
+    "section": "",
+    "text": "ARC PRIZE 2026\n\n\n\n\n\nAn agent and inference stack running DeepSeek-V4.1-Flash on 4×L4. 81.81, 5th on the public leaderboard. 在 4×L4 上跑 DeepSeek-V4.1-Flash 的智能体与推理栈。公榜第 5（81.81）。\nDetails →项目页 → Writeup ↗\n\n\n\nNSCSCC 2026\n\n\n\nMIKU\n\nSecond Prize in the NSCSCC CPU design track. A three-person team built a multi-issue out-of-order core in SpinalHDL and booted Linux; I also built an MCP tool for automated FPGA deployment and hardware validation. 龙芯杯 CPU 设计赛二等奖。三人团队用 SpinalHDL 写多发射乱序核并启动 Linux；我还做了自动化 FPGA 部署与硬件验证的 MCP 工具。\n\n\n\n2025 · INDEPENDENT\n\n\n\ngm!new meme get??\n\nRan a chatbot in an online group chat for about six months. With journalism and communication students, studied how new expressions emerge, shift in meaning and spread, and designed an annotation scheme for them. 在线上群聊里部署并维护聊天机器人约半年；与新闻传播专业同学合作，研究群内新说法如何出现、变义与流行，并设计标注方案。\n\n\n\nKAGGLE · SILVER\n\n\n\n🥈\n\nSynthetic-data SFT for reasoning tasks, plus experiments with reinforcement learning and on-policy distillation. 合成数据 SFT 提升推理题型准确率，并尝试强化学习与 on-policy 蒸馏。\nKaggle ↗\n\n\n\nOPEN SOURCE\n\n\n\ntools→text→tools\n\nConverts native function-call requests into a validated plain-text action protocol, so chat-only OpenAI-compatible endpoints can still drive coding agents. 把原生 function-call 请求转成经过校验的纯文本动作协议，让只会普通对话的 OpenAI 兼容接口也能驱动编程智能体。\nGitHub ↗\n\n\n\nNEXT\n\n\n\n🚧 Under construction 🚧🚧 建设中 🚧",
+    "crumbs": [
+      "◆Projects"
+    ]
+  },
+  {
+    "objectID": "projects.html#arc-agi-2-fit-the-whale",
+    "href": "projects.html#arc-agi-2-fit-the-whale",
+    "title": "Projects",
+    "section": "",
+    "text": "An agent and inference stack running DeepSeek-V4.1-Flash on 4×L4. 81.81, 5th on the public leaderboard. 在 4×L4 上跑 DeepSeek-V4.1-Flash 的智能体与推理栈。公榜第 5（81.81）。\nDetails →项目页 → Writeup ↗",
+    "crumbs": [
+      "◆Projects"
+    ]
+  },
+  {
+    "objectID": "projects.html#miku-out-of-order-la32r-cpumikula32r-乱序-cpu",
+    "href": "projects.html#miku-out-of-order-la32r-cpumikula32r-乱序-cpu",
+    "title": "Projects",
+    "section": "",
+    "text": "MIKU\n\nSecond Prize in the NSCSCC CPU design track. A three-person team built a multi-issue out-of-order core in SpinalHDL and booted Linux; I also built an MCP tool for automated FPGA deployment and hardware validation. 龙芯杯 CPU 设计赛二等奖。三人团队用 SpinalHDL 写多发射乱序核并启动 Linux；我还做了自动化 FPGA 部署与硬件验证的 MCP 工具。",
+    "crumbs": [
+      "◆Projects"
+    ]
+  },
+  {
+    "objectID": "projects.html#group-chat-social-agent群聊社交智能体",
+    "href": "projects.html#group-chat-social-agent群聊社交智能体",
+    "title": "Projects",
+    "section": "",
+    "text": "gm!new meme get??\n\nRan a chatbot in an online group chat for about six months. With journalism and communication students, studied how new expressions emerge, shift in meaning and spread, and designed an annotation scheme for them. 在线上群聊里部署并维护聊天机器人约半年；与新闻传播专业同学合作，研究群内新说法如何出现、变义与流行，并设计标注方案。",
+    "crumbs": [
+      "◆Projects"
+    ]
+  },
+  {
+    "objectID": "projects.html#nvidia-nemotron-reasoning",
+    "href": "projects.html#nvidia-nemotron-reasoning",
+    "title": "Projects",
+    "section": "",
+    "text": "🥈\n\nSynthetic-data SFT for reasoning tasks, plus experiments with reinforcement learning and on-policy distillation. 合成数据 SFT 提升推理题型准确率，并尝试强化学习与 on-policy 蒸馏。\nKaggle ↗",
+    "crumbs": [
+      "◆Projects"
+    ]
+  },
+  {
+    "objectID": "projects.html#genai2agentrelay",
+    "href": "projects.html#genai2agentrelay",
+    "title": "Projects",
+    "section": "",
+    "text": "tools→text→tools\n\nConverts native function-call requests into a validated plain-text action protocol, so chat-only OpenAI-compatible endpoints can still drive coding agents. 把原生 function-call 请求转成经过校验的纯文本动作协议，让只会普通对话的 OpenAI 兼容接口也能驱动编程智能体。\nGitHub ↗",
+    "crumbs": [
+      "◆Projects"
+    ]
+  },
+  {
+    "objectID": "projects.html#next-signal下一个信号",
+    "href": "projects.html#next-signal下一个信号",
+    "title": "Projects",
+    "section": "",
+    "text": "🚧 Under construction 🚧🚧 建设中 🚧",
+    "crumbs": [
+      "◆Projects"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Home",
+    "section": "",
+    "text": "You are visitor你是第 001337 !位访客！\n\n\n\n\n\n\n\n\n\n\n\nupdates.txt更新记录.txt\n\n\n\n\n2026.11.06 About page and projects filled in; English is now the default language.关于我和项目页填好了，网站默认语言改为英文。\n\n\n2026.11.06 Redecorated the whole site with new wallpaper.网站重新装修完成，换上了新的墙纸。\n\n\n2026.08.27 New post:新文章： Hello, Lunar Room\n\n\n2026.08.27 The Lunar Room opens.月面通信室开张。\n\n\nNo matching items\n\n\n\n\n☆ Web Clap ☆☆ Web拍手 ☆\n\n\n\n\n\n\n\n◆ Notice ◆◆站长公告◆\n\n\nWelcome to Quark’s Lunar Room!\n\n\n欢迎来到 Quark 的月面通信室！\n\n\nNotes, projects and a bit of everyday life are moving in. Drop by again sometime.\n\n\n笔记、项目和一点日常正在陆续搬进来，常来看看哦。\n\n\n★ Link freely — bookmarks welcome ★★ 本站链接自由，欢迎收藏 ★\n\n\n\n\n\n\nRoom房间\n\n\nWhat’s inside内容\n\n\n\n\n\n\nAbout关于我\n\n\nBio, CV and contact自我介绍、简历与联系方式\n\n\n\n\nBlog博客文章 NEW!\n\n\nStudy notes, research logs and essays学习笔记、研究日志与随笔\n\n\n\n\nProjects项目记录\n\n\nThings I’m building and have built正在做和做过的项目\n\n\n\n\nRSS\n\n\nSubscribe to new posts订阅文章更新\n\n\n\n\n\nLatest Posts最新文章\n\n\n\n\n\n\nHello, Lunar Room\n\n\n\nEssay\n\n\n\nThe first post. / 开张第一篇。\n\n\n\n\n\nAug 27, 2026\n\n\n\n\n\nNo matching items\n\n\n\n\n\n\n Back to top",
+    "crumbs": [
+      "◆Home"
+    ]
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "CS undergraduate at ShanghaiTech University, on exchange at UIUC for 2026–27.\nLanguage agents · LLM post-training · Algorithm–system co-design\n\n\n上海科技大学计算机科学本科生，2026–27 学年在 UIUC 交换。\n对话与社交智能体 · LLM 后训练 · 算法–系统协同设计\n\nGitHub Google Scholar Kaggle LinkedIn\n📮 bushil2@illinois.edu",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#bushi-liu刘补石-bushi-liu",
+    "href": "about.html#bushi-liu刘补石-bushi-liu",
+    "title": "About",
+    "section": "",
+    "text": "CS undergraduate at ShanghaiTech University, on exchange at UIUC for 2026–27.\nLanguage agents · LLM post-training · Algorithm–system co-design\n\n\n上海科技大学计算机科学本科生，2026–27 学年在 UIUC 交换。\n对话与社交智能体 · LLM 后训练 · 算法–系统协同设计\n\nGitHub Google Scholar Kaggle LinkedIn\n📮 bushil2@illinois.edu",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#research-interests",
+    "href": "about.html#research-interests",
+    "title": "About",
+    "section": "Research Interests",
+    "text": "Research Interests\n\nInteractive and socially-aware language agents\nLLM post-training: reinforcement learning, distillation, continual adaptation\nAlgorithm–system co-design for efficient inference and training",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "About",
+    "section": "Education",
+    "text": "Education\n\n\n\n\n\n\n\n\nSchool\nProgram\nDates\n\n\n\n\nShanghaiTech University\nB.S. Computer Science\nExpected 2028\n\n\nUniversity of Illinois Urbana-Champaign\nExchange student (non-degree)\nFall 2026 – Spring 2027",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#research-experience",
+    "href": "about.html#research-experience",
+    "title": "About",
+    "section": "Research Experience",
+    "text": "Research Experience\n\nSWM Project · 2026 · U Lab, UIUC · Research Co-Lead\n\nLead post-training and evaluation of Qwen3-4B with GRPO for prediction-market probability forecasting.\nInvestigate market-implied belief updates as supervision for aggregate responses to real-world events, including potential transfer to interpreting individuals’ beliefs.\nSubmitting to ICLR 2027.\n\n\n\nSign Language Translation with 3D Motion Representations · 2026 · DGene Inc.\n\nInvestigated SMPL-X representations and 3D motion priors for end-to-end sign language translation, adapting baseline models to test the feasibility of 3D inputs.\nDesigned probing experiments showing that intermediate motion-capture representations retain confidence-related information lost in the final decoded poses.\nReplaced Uni-Sign’s ST-GCN encoder with a motion-capture-pretrained model: with the same RGB videos and hyperparameters, it reached comparable CSL-News translation performance in fewer training steps.\n\n\n\nSymBridge — Human–Robot Interaction · 2024–2025 · Prof. Yuexin Ma’s group, ShanghaiTech\n\nContributed to the design of a human-in-the-loop cyber-physical system for human–robot interaction.\nLed model evaluation, including task-specific evaluation metrics.",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#selected-projects",
+    "href": "about.html#selected-projects",
+    "title": "About",
+    "section": "Selected Projects",
+    "text": "Selected Projects\n\nARC-AGI-2: Fit the Whale — agent + inference stack for DeepSeek-V4.1-Flash; 81.81, 5th on the public leaderboard (ongoing).\nMIKU out-of-order CPU — NSCSCC 2026 Second Prize; multi-issue OoO core with Linux bring-up, plus an MCP tool for automated FPGA deployment.\nGroup-chat social agent — a chatbot run in an online group chat for six months, studying how new expressions emerge and spread.\nGenAI2AgentRelay — turns native tool calls into a validated plain-text action protocol.\n\nAll projects →",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#publications",
+    "href": "about.html#publications",
+    "title": "About",
+    "section": "Publications",
+    "text": "Publications\nH. Chen, Y. Xu, Y. Ren, Y. Ye, X. Li, N. Ding, Y. Wu, Y. Liu, P. Cong, Z. Wang, Bushi Liu, Y. Chen, Z. Dou, X. Leng, M. Li, Y. Ma, and C. Tu. SymBridge: A Human-in-the-Loop Cyber-Physical Interactive System for Adaptive Human-Robot Symbiosis. SIGGRAPH Asia 2025 Conference Papers, 2025. [Paper]",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#honors",
+    "href": "about.html#honors",
+    "title": "About",
+    "section": "Honors",
+    "text": "Honors\n\n🥈 Silver Medal — Kaggle NVIDIA Nemotron Model Reasoning Challenge (2026)\n🏅 Second Prize — NSCSCC CPU Design Track (2026)\n📊 ARC Prize 2026: ARC-AGI-2 — 5th on the public leaderboard, 81.81 (ongoing)",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#skills",
+    "href": "about.html#skills",
+    "title": "About",
+    "section": "Skills",
+    "text": "Skills\n\nLanguages: Python, C, C++\nFrameworks / tools: PyTorch, verl, Docker, Codex, Claude Code\nMethods: LLM post-training (GRPO, forward-KL distillation, SFT), MoE pruning and low-bit quantization, speculative decoding, harness evaluation & development",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#研究兴趣",
+    "href": "about.html#研究兴趣",
+    "title": "About",
+    "section": "研究兴趣",
+    "text": "研究兴趣\n\n交互式、具备社会感知的语言智能体\nLLM 后训练：强化学习、蒸馏、持续适应\n面向高效推理与训练的算法–系统协同设计",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#教育经历",
+    "href": "about.html#教育经历",
+    "title": "About",
+    "section": "教育经历",
+    "text": "教育经历\n\n\n\n\n\n\n\n\n学校\n身份\n时间\n\n\n\n\n上海科技大学\n计算机科学 本科\n预计 2028 年毕业\n\n\nUniversity of Illinois Urbana-Champaign\n交换生（非学位）\n2026 秋 – 2027 春",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#研究经历",
+    "href": "about.html#研究经历",
+    "title": "About",
+    "section": "研究经历",
+    "text": "研究经历\n\nSWM Project · 2026 · U Lab, UIUC · Research Co-Lead\n\n负责 Qwen3-4B 的 GRPO 后训练与评估，用于预测市场的概率预测。\n研究把市场隐含的信念更新作为监督信号，刻画群体对真实世界事件的反应，并探索迁移到理解个体信念。\n投稿 ICLR 2027 中。\n\n\n\n基于 3D 动作表示的手语翻译 · 2026 · DGene Inc.\n\n研究 SMPL-X 表示与 3D 动作先验用于端到端手语翻译，改造基线模型以评估 3D 输入的可行性。\n设计探针实验，发现动捕中间表示保留了最终解码姿态中丢失的置信度相关信息。\n用动捕预训练编码器替换 Uni-Sign 的 ST-GCN 编码器：相同 RGB 视频与超参下，在 CSL-News 上以更少训练步数达到相当的翻译效果。\n\n\n\nSymBridge：人机交互 · 2024–2025 · 马月昕老师课题组，上海科技大学\n\n参与设计人在回路的人–机器人交互信息物理系统。\n负责模型评测，包括设计任务相关的评测指标。",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#重点项目",
+    "href": "about.html#重点项目",
+    "title": "About",
+    "section": "重点项目",
+    "text": "重点项目\n\nARC-AGI-2：Fit the Whale —— 为 DeepSeek-V4.1-Flash 搭建智能体与推理栈，公榜 81.81、第 5（比赛进行中）。\nMIKU 乱序 CPU —— 龙芯杯 2026 二等奖；多发射乱序核并启动 Linux，另做了自动化 FPGA 部署的 MCP 工具。\n群聊社交智能体 —— 在线上群聊运行聊天机器人半年，研究新说法如何出现和流行。\nGenAI2AgentRelay —— 把原生工具调用转成经过校验的纯文本动作协议。\n\n全部项目 →",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#论文",
+    "href": "about.html#论文",
+    "title": "About",
+    "section": "论文",
+    "text": "论文\nH. Chen, Y. Xu, Y. Ren, Y. Ye, X. Li, N. Ding, Y. Wu, Y. Liu, P. Cong, Z. Wang, Bushi Liu, Y. Chen, Z. Dou, X. Leng, M. Li, Y. Ma, and C. Tu. SymBridge: A Human-in-the-Loop Cyber-Physical Interactive System for Adaptive Human-Robot Symbiosis. SIGGRAPH Asia 2025 Conference Papers, 2025. [Paper]",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#获奖",
+    "href": "about.html#获奖",
+    "title": "About",
+    "section": "获奖",
+    "text": "获奖\n\n🥈 Kaggle NVIDIA Nemotron Model Reasoning Challenge 银牌（2026）\n🏅 全国大学生计算机系统能力大赛（龙芯杯）CPU 设计赛 二等奖（2026）\n📊 ARC Prize 2026: ARC-AGI-2 公榜第 5（81.81，比赛进行中）",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "about.html#技能",
+    "href": "about.html#技能",
+    "title": "About",
+    "section": "技能",
+    "text": "技能\n\n语言：Python、C、C++\n框架 / 工具：PyTorch、verl、Docker、Codex、Claude Code\n方法：LLM 后训练（GRPO、前向 KL 蒸馏、SFT）、MoE 剪枝与低比特量化、投机解码、harness 评测与开发",
+    "crumbs": [
+      "◆About"
+    ]
+  },
+  {
+    "objectID": "posts/hello-lunar-web/index.html",
+    "href": "posts/hello-lunar-web/index.html",
+    "title": "Hello, Lunar Room",
+    "section": "",
+    "text": "This is my personal homepage and blog. Study notes, research logs and the occasional essay will show up here.\nYou can follow new posts via RSS.\n\n\n这里是我的个人主页兼博客，之后会在这里放学习笔记、研究日志和一些随笔。\n可以通过 RSS 订阅更新。\n\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/arc-agi/index.html",
+    "href": "projects/arc-agi/index.html",
+    "title": "ARC-AGI-2: Fit the Whale",
+    "section": "",
+    "text": "81.81, 5th on the public leaderboard (competition ongoing). Full details in the Kaggle Technical Writeup.\n\n\n\nAn end-to-end agent and inference stack that deploys DeepSeek-V4.1-Flash on Kaggle’s 4×L4 machines to solve ARC-AGI-2.\n\n\n\n\nAgentic collapse after pruning 60% of routed experts: invisible to teacher-forced NLL, but multi-turn execution broke. Protecting structural-token and single-character experts restored it.\nGetting accuracy back: layer-group swap-back experiments showed the recoverable loss sat in the final 5 layers; rank-16 expert LoRAs trained with offline forward-KL distillation on a 625-task synthetic set recovered full-model accuracy.\nHarness and scheduling: a multi-turn Python harness and an 80-sequence SGLang serving scheduler, pairing 100k-token budgets with pseudo-@2 dual submissions under L4 memory-bandwidth limits."
+  },
+  {
+    "objectID": "projects/arc-agi/index.html#what-we-built",
+    "href": "projects/arc-agi/index.html#what-we-built",
+    "title": "ARC-AGI-2: Fit the Whale",
+    "section": "",
+    "text": "An end-to-end agent and inference stack that deploys DeepSeek-V4.1-Flash on Kaggle’s 4×L4 machines to solve ARC-AGI-2."
+  },
+  {
+    "objectID": "projects/arc-agi/index.html#highlights",
+    "href": "projects/arc-agi/index.html#highlights",
+    "title": "ARC-AGI-2: Fit the Whale",
+    "section": "",
+    "text": "Agentic collapse after pruning 60% of routed experts: invisible to teacher-forced NLL, but multi-turn execution broke. Protecting structural-token and single-character experts restored it.\nGetting accuracy back: layer-group swap-back experiments showed the recoverable loss sat in the final 5 layers; rank-16 expert LoRAs trained with offline forward-KL distillation on a 625-task synthetic set recovered full-model accuracy.\nHarness and scheduling: a multi-turn Python harness and an 80-sequence SGLang serving scheduler, pairing 100k-token budgets with pseudo-@2 dual submissions under L4 memory-bandwidth limits."
+  },
+  {
+    "objectID": "projects/arc-agi/index.html#做了什么",
+    "href": "projects/arc-agi/index.html#做了什么",
+    "title": "ARC-AGI-2: Fit the Whale",
+    "section": "做了什么",
+    "text": "做了什么\n在 Kaggle 的 4×L4 环境里，端到端搭建智能体与推理栈，部署 DeepSeek-V4.1-Flash 解 ARC-AGI-2。"
+  },
+  {
+    "objectID": "projects/arc-agi/index.html#几个关键点",
+    "href": "projects/arc-agi/index.html#几个关键点",
+    "title": "ARC-AGI-2: Fit the Whale",
+    "section": "几个关键点",
+    "text": "几个关键点\n\n剪掉 60% 路由专家后的”智能体崩溃”：teacher-forced NLL 几乎看不出问题，但多轮执行会失效。保护结构 token 和单字符专家后恢复正常。\n把精度找回来：分层组换回实验显示可恢复的损失集中在最后 5 层；在 625 题合成数据上，用离线前向 KL 蒸馏训练 rank-16 专家 LoRA，恢复到完整模型的准确率。\nharness 与调度：多轮 Python harness，加上 80 序列的 SGLang 调度器；在 L4 显存带宽限制下，配合 100k token 预算与伪 @2 双提交。"
+  }
+]
