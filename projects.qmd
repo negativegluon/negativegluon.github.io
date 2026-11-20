@@ -52,6 +52,7 @@ toc: false
 [Synthetic-data SFT for reasoning tasks, plus experiments with reinforcement learning and on-policy distillation.]{.en}
 [合成数据 SFT 提升推理题型准确率，并尝试强化学习与 on-policy 蒸馏。]{.zh}
 
+[[Post-mortem →]{.en}[复盘文章 →]{.zh}](posts/nemotron-postmortem/){.retro-button}
 [Kaggle ↗](https://www.kaggle.com/quarkliu){.retro-button}
 :::
 
