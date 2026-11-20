@@ -787,6 +787,7 @@ section.level3 > h3 { margin-top: 1.4em; font-size: 1.12rem; }
 /* ---------- 中英切换 ---------- */
 
 html:not(.lang-zh) .zh, html.lang-zh .en { display: none !important; }
+.feed-sep { display: none; } /* 只在 RSS 里把中英标题隔开 */
 
 .lang-switch {
   display: flex;
@@ -813,4 +814,10 @@ body.is-loading main.content { opacity: .55; transition: opacity .15s; }
   border: 3px solid var(--ink);
   box-shadow: 4px 4px 0 rgba(29, 63, 99, .22);
   filter: none;
+}
+
+/* 窄屏：宽表格在自身框内横向滚动，不撑破页面 */
+@media (max-width: 767.98px) {
+  main.content table { display: block; max-width: 100%; overflow-x: auto; }
+  main.content a { overflow-wrap: anywhere; }
 }

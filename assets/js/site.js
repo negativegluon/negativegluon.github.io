@@ -184,18 +184,51 @@
 
   /* ---------- 文章页：目录折叠进正文 ---------- */
 
+  // 标题被 .en / .zh 包住、且块里有引用或分隔线时，Pandoc 不生成目录；文章页自己从小节生成
+  function buildToc(main) {
+    const nav = document.createElement('nav');
+    nav.id = 'TOC';
+    const top = document.createElement('ul');
+    nav.appendChild(top);
+    let sub = null;
+    main.querySelectorAll('section.level2[id], section.level3[id]').forEach((sec) => {
+      const h = sec.querySelector(':scope > h2, :scope > h3');
+      if (!h) return;
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + sec.id;
+      a.textContent = h.textContent.trim();
+      li.appendChild(a);
+      if (sec.classList.contains('level2')) {
+        top.appendChild(li);
+        sub = null;
+      } else if (top.lastElementChild) {
+        if (!sub) { sub = document.createElement('ul'); top.lastElementChild.appendChild(sub); }
+        sub.appendChild(li);
+      }
+    });
+    return nav;
+  }
+
   function initInlineToc() {
     const margin = document.querySelector('#quarto-margin-sidebar');
-    const toc = margin?.querySelector('#TOC');
     const main = document.querySelector('main.content');
+    let toc = margin?.querySelector('#TOC');
+    if (!toc && main && /\/posts\/[^/]+\//.test(location.pathname)) toc = buildToc(main);
     if (!toc || !main || !toc.querySelector('li')) return;
+    // 双语文章：目录条目跟随标题所在的 .en / .zh 一起显示/隐藏
+    toc.querySelectorAll('a[href^="#"]').forEach((a) => {
+      const target = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+      const lang = target?.closest('.en, .zh');
+      if (lang) a.closest('li')?.classList.add(lang.classList.contains('en') ? 'en' : 'zh');
+    });
     const box = document.createElement('details');
     box.className = 'inline-toc';
     box.innerHTML = '<summary>◆ On this page</summary>';
     box.appendChild(toc);
     const title = main.querySelector(':scope > .quarto-title-block, :scope > header');
     if (title) title.after(box); else main.prepend(box);
-    margin.remove();
+    margin?.remove();
   }
 
   /* ---------- 站内无刷新跳转：侧栏和 BGM 保持不动 ---------- */

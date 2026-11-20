@@ -2,12 +2,14 @@
   {
     "listing": "/writing.html",
     "items": [
+      "/posts/nemotron-postmortem/index.html",
       "/posts/hello-lunar-web/index.html"
     ]
   },
   {
     "listing": "/index.html",
     "items": [
+      "/posts/nemotron-postmortem/index.html",
       "/posts/hello-lunar-web/index.html"
     ]
   }
