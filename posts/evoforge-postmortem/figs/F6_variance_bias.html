@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F6 - F6_variance_bias</title>
+<style>
+:root{--sky:#7fd6dc;--sky-deep:#3b9cba;--mint:#d3f6ef;--paper:#fffbe8;--cream:#fff3b8;--ink:#1d3f63;--muted:#557489;--link:#1a4fd6;--pink:#ef4c72;--orange:#f08a3a;--gold:#e3a700;--lcd:#34ff5a}
+*{box-sizing:border-box}html,body{margin:0;background:transparent}
+body{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;color:var(--ink);padding:6px 8px 10px}
+.card{background:var(--paper);border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(29,63,99,.22);border-radius:10px;overflow:hidden;max-width:1100px;margin:0 auto}
+.hd{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:2px solid var(--ink);
+ background-color:var(--cream);background-image:linear-gradient(rgba(29,63,99,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(29,63,99,.07) 1px,transparent 1px);background-size:14px 14px}
+.lcd{font-family:Consolas,"Courier New",monospace;font-weight:700;background:var(--ink);color:var(--lcd);padding:2px 8px;border-radius:4px;letter-spacing:1px;font-size:15px;text-shadow:0 0 4px rgba(52,255,90,.55)}
+.hd h1{font-size:16px;line-height:1.3;margin:0;flex:1;font-weight:700}
+.hd .star{color:var(--gold);font-size:14px}
+.lang{display:flex;border:2px solid var(--ink);border-radius:6px;overflow:hidden}
+.lang button{font:inherit;font-size:12px;border:0;background:var(--paper);color:var(--ink);padding:3px 9px;cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.ctl{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding:8px 12px 0;font-size:13px}
+.ctl label{display:inline-flex;gap:6px;align-items:center;color:var(--muted)}
+.ctl select,.ctl button.btn{font:inherit;font-size:13px;color:var(--ink);background:var(--paper);border:2px solid var(--ink);border-radius:6px;padding:2px 6px;cursor:pointer}
+.ctl button.btn[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.ctl button.act{background:var(--sky);box-shadow:2px 2px 0 rgba(29,63,99,.22)}
+.ctl input[type=range]{accent-color:var(--sky-deep);width:150px}
+.ctl .val{font-family:Consolas,monospace;color:var(--ink);min-width:3.2em;display:inline-block}
+.grp{display:inline-flex;gap:4px}
+#mount{padding:4px 8px 0}#mount svg{width:100%;height:auto;display:block}
+.cap{margin:0;padding:6px 14px 2px;font-size:13px;line-height:1.55}
+.src{margin:0;padding:0 14px 8px;font-size:11.5px;color:var(--muted);font-family:Consolas,monospace;word-break:break-all}
+details{border-top:2px dashed rgba(29,63,99,.35);padding:4px 14px 8px;font-size:12px}
+summary{cursor:pointer;color:var(--link)}
+table{border-collapse:collapse;margin-top:6px;font-size:12px;width:100%}
+th,td{border:1px solid rgba(29,63,99,.25);padding:2px 6px;text-align:left;font-variant-numeric:tabular-nums}
+th{background:var(--mint)}
+.tblwrap{max-height:260px;overflow:auto}
+#tip{position:fixed;z-index:9;pointer-events:none;background:var(--paper);border:2px solid var(--ink);box-shadow:3px 3px 0 rgba(29,63,99,.22);border-radius:6px;padding:6px 9px;font-size:12.5px;max-width:340px;line-height:1.45;display:none}
+#tip .tt{font-weight:700;margin-bottom:2px}#tip .r{display:flex;gap:6px;align-items:baseline}
+#tip .sw{display:inline-block;width:14px;height:0;border-top:3px solid;flex:none;transform:translateY(-3px)}
+#tip .v{font-weight:700;font-variant-numeric:tabular-nums}#tip .k{color:var(--muted)}#tip .n{color:var(--muted);margin-top:3px;font-size:11.5px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head>
+<body>
+<div class="card" id="card">
+ <div class="hd"><span class="lcd" id="figno"></span><h1 id="title"></h1><span class="star">&#10022;</span>
+  <div class="lang" role="group" aria-label="language"><button id="bzh" aria-pressed="true">中</button><button id="ben" aria-pressed="false">EN</button></div></div>
+ <div class="ctl" id="ctl"></div>
+ <div id="mount"></div>
+ <p class="cap" id="cap"></p><p class="src" id="src"></p>
+ <details><summary id="tblsum"></summary><div class="tblwrap" id="tbl"></div></details>
+</div>
+<div id="tip" role="tooltip"></div>
+<script>
+const T = {
+  zh: {
+    title: '方差 vs 偏差：同一句"本地分高、公榜低"在不同地形上要不同诊断',
+    caption: '左：N 个真实水平完全相同的候选在带噪面板上取最大，被选中者的期望高估约为 σ√(2 ln N)（渐近式，N 小时偏高，图中同时给出数值积分的精确值）；右：封闭种群内的 Elo 可以很精确，却只对种群内的对手有效，换成种群外的对手，同一个改动的价值可能完全不同。左图数值为示意，右图只是定性示意，都不是实测。',
+    srcLabel: '数据：', scriptLabel: '脚本：',
+    src: '纯示意图，没有实测数据；左图用固定种子的随机数模拟，右图不含数字',
+    script: 'figs/src/F6.js（浏览器内用固定种子的正态采样与数值积分）',
+    tableView: '数据表（当前参数下的数值）',
+    ctlN: '候选数 N', ctlSigma: '面板噪声 σ', ctlResample: '重新抽样', 
+    hl: '高亮', hlAll: '全部', hlVar: '方差', hlBias: '偏差',
+    leftTitle: '方差：N 个同等候选取最大（赢家诅咒）', midTitle: '三类问题的区分', rightTitle: '偏差：封闭标尺内的 Elo',
+    truth: '真实水平（全部相同）= 0', eExactS: '精确期望', eAsymS: '渐近式', truthS: '真实水平', eExact: '期望最大值（精确）', eAsym: '渐近式 σ√(2 ln N)', winner: '赢家', fresh: '重评',
+    pickScore: '选中时 +{a} pp', freshScore: '重评 {b} pp', scoreAxis: '面板分偏差（pp）',
+    insetTitle: '期望高估 / σ 随 N 的变化', insetN: 'N（对数轴）', insetCur: '当前 N',
+    formula: '渐近式只说明方向，N 小时偏高；本系统没有单独估计过 σ。',
+    readout: 'N = {n}，σ = {s} pp：期望高估 精确 {e} pp，渐近式 {a} pp',
+    m1t: '方差型（SB）', m1a: '同一个候选换一块同样大小的面板，分数能差好几个百分点，而候选之间只差零点几', m1b: '取最大就是赢家诅咒：被选中的那个系统性地被高估', m1c: '多评几次没用：只要选择还在同一块面板上做，偏差就不会消失（那块面板已被反复评了上百次）',
+    m2t: '偏差型（Kag v1）', m2a: '不存在"另一批数据"：Elo 只在种群内部有定义', m2b: '多打对局没用（每个策略早已打了上千局）；种群外的对手能测，但只有 4 个公开参考', m2c: '选出来的是"这群策略里最强的"，高估来自标尺本身',
+    m3t: '脱钩型（AIIJC，本图未画）', m3a: '换验证折也恢复不了盲性；只有公榜是新数据，而且次数很少、噪声不小', m3b: '本地最高的几个，公榜反而更低，排名甚至是负相关',
+    stack: '三类问题可以叠加：SB 又噪又在同一块面板上反复使用，Kag 又偏又被奖励放大。',
+    popIn: '种群内的对手', popOut: '外部的对手', lgCok: 'COK 谱系', lgOth: '其他来源（颜色各异）',
+    rankHead: '同一个改动，两种标尺', chg: '溢出守卫这一项改动', rulerIn: '在种群内测得的增益', rulerOut: '对会溢出的对手', rankIn: '内部标尺', rankOut: '外部标尺',
+    sg: '溢出守卫', sk: 'COK 变体', sv: 'V8 基线', gIn: '增益：0', gOut: '有增益',
+    flip: '封闭标尺看不见这类改动的价值。',
+    eloNote: '内部 Elo 可以很精确，但标尺只对这群对手成立。示意图，不含实测数值。',
+    th: ['项', '值']
+  },
+  en: {
+    title: 'Variance vs bias: "high locally, low on the public board" needs different diagnoses on different terrains',
+    caption: 'Left: pick the maximum of N equally good candidates on a noisy panel and the expected overestimate of the winner is about sigma*sqrt(2 ln N) (asymptotic; high for small N, so the numerically integrated exact value is also shown). Right: Elo inside a closed population can be very precise but is only valid against that population; against outside opponents the same change can look entirely different. The left-hand numbers are illustrative and the right is qualitative only; none are measured.',
+    srcLabel: 'Data: ', scriptLabel: 'Script: ',
+    src: 'Pure schematic, no measured data; the left uses seeded random simulation, the right contains no numbers',
+    script: 'figs/src/F6.js (seeded normal sampling and numerical integration in the browser)',
+    tableView: 'Data table (values at current parameters)',
+    ctlN: 'Candidates N', ctlSigma: 'Panel noise sigma', ctlResample: 'Resample', 
+    hl: 'Highlight', hlAll: 'All', hlVar: 'Variance', hlBias: 'Bias',
+    leftTitle: 'Variance: max of N equal candidates (winner\'s curse)', midTitle: 'Telling the three problems apart', rightTitle: 'Bias: Elo inside a closed ruler',
+    truth: 'true level (all identical) = 0', eExactS: 'exact', eAsymS: 'asymptotic', truthS: 'true level', eExact: 'expected max (exact)', eAsym: 'asymptotic sigma*sqrt(2 ln N)', winner: 'winner', fresh: 're-eval',
+    pickScore: 'at selection +{a} pp', freshScore: 're-eval {b} pp', scoreAxis: 'panel-score deviation (pp)',
+    insetTitle: 'Expected overestimate / sigma vs N', insetN: 'N (log axis)', insetCur: 'current N',
+    formula: 'The asymptotic form only shows direction and is high for small N; this system never estimated sigma.',
+    readout: 'N = {n}, sigma = {s} pp: expected overestimate exact {e} pp, asymptotic {a} pp',
+    m1t: 'Variance type (SB)', m1a: 'The same candidate on another panel of equal size can score several points differently, while candidates differ by only tenths', m1b: 'Taking the max is the winner\'s curse: the selected one is systematically overestimated.', m1c: 'More evaluations do not help: as long as selection happens on the same panel the bias stays (that panel was scored over a hundred times)',
+    m2t: 'Bias type (Kag v1)', m2a: 'There is no "other batch of data": Elo is only defined inside the population', m2b: 'More games do not help (each strategy already played over a thousand); outside opponents would, but there are only 4 public references', m2c: 'The selected one is "strongest in this population"; the overestimate is the ruler itself',
+    m3t: 'Decoupling type (AIIJC, not drawn)', m3a: 'Switching validation folds does not restore blindness; only the public board is new data, and it is scarce and noisy', m3b: 'The best local candidates scored lower publicly; the ranking was even negatively correlated',
+    stack: 'The problems stack: SB is noisy and reused on one panel; Kag is biased and amplified by rewards.',
+    popIn: 'Opponents inside the population', popOut: 'Outside opponents', lgCok: 'COK lineage', lgOth: 'other sources (varied colours)',
+    rankHead: 'One change, two rulers', chg: 'The overflow-guard change', rulerIn: 'Gain measured inside the population', rulerOut: 'Against opponents that overflow', rankIn: 'Internal ruler', rankOut: 'External ruler',
+    sg: 'Overflow guard', sk: 'COK variant', sv: 'V8 baseline', gIn: 'gain: 0', gOut: 'a gain',
+    flip: 'The closed ruler cannot see the value of this kind of change.',
+    eloNote: 'Internal Elo can be precise, but the ruler only holds for this population. Schematic; no measured values.',
+    th: ['item', 'value']
+  }
+};
+
+const DATA = {};
+</script>
+<script>
+/* lib.js - shared helpers for all figures (vanilla JS, no deps).
+   Pure string-SVG renderers: the same code runs in the browser (interactive HTML) and in node (static SVG export).
+   Palette: site retro.css variables; categorical marks validated with dataviz validate_palette.py on surface #fffbe8
+   ([sky, orange, blue, gold] adjacent-pairs PASS; pink is a reserved alert accent, never next to orange). */
+const PAL = {
+  ink: '#1d3f63', muted: '#557489', paper: '#fffbe8', cream: '#fff3b8', mint: '#d3f6ef', sky: '#7fd6dc', skyDeep: '#3b9cba',
+  link: '#1a4fd6', pink: '#ef4c72', orange: '#f08a3a', gold: '#e3a700', lcd: '#34ff5a',
+  // validated mark colors (darkened for >=3:1 against paper)
+  c1: '#2c8fb0', c2: '#d9701a', c3: '#1a4fd6', c4: '#b88600', alert: '#ef4c72', gray: '#7f97a6',
+  grid: '#ebe5c6', axis: '#a9b7c2', shadow: 'rgba(29,63,99,.22)'
+};
+const FONT = '"Microsoft YaHei","PingFang SC","Noto Sans CJK SC","Noto Sans SC",sans-serif';
+const MONO = 'Consolas,"Courier New",monospace';
+
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function tr(lang, key, vars) {
+  var d = (typeof T !== 'undefined' ? T : {});
+  var s = (d[lang] && d[lang][key] != null) ? d[lang][key] : (d.zh && d.zh[key] != null ? d.zh[key] : key);
+  if (vars) for (var k in vars) s = s.split('{' + k + '}').join(vars[k]);
+  return s;
+}
+function f1(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+function f2(x) { return (Math.round(x * 100) / 100).toFixed(2); }
+function pct(x, d) { return (x * 100).toFixed(d == null ? 0 : d) + '%'; }
+function cjk(c) { return c >= 0x2e80 || (c >= 0x2000 && c <= 0x206f); }
+function tw(s, fs) { var w = 0; for (var i = 0; i < s.length; i++) { var c = s.charCodeAt(i); w += cjk(c) ? fs : (c === 32 ? fs * 0.32 : fs * 0.58); } return w; }
+/* wrap text to a pixel width. Break opportunities: between CJK chars, after spaces, after hyphens; never before closing
+   punctuation (，。、；：）」？！,.;:)), never inside a latin/digit run (e.g. "384"); overlong runs are split as a last resort. */
+function wrap(s, maxW, fs) {
+  var out = [], line = '', w = 0, toks = [], i, ch, cur = '', closeP = '，。、；：）」』》？！,.;:)%', hy = false;
+  s = String(s);
+  function flush() { if (cur) { toks.push(cur); cur = ''; } }
+  for (i = 0; i < s.length; i++) {
+    ch = s[i];
+    if (ch === '\n') { flush(); toks.push('\n'); continue; }
+    if (ch === ' ') { flush(); toks.push(' '); continue; }
+    if (cjk(ch.charCodeAt(0))) {
+      if (closeP.indexOf(ch) >= 0 && (cur || toks.length)) { if (cur) cur += ch; else { var t = toks.length - 1; if (toks[t] === ' ' || toks[t] === '\n') toks.push(ch); else toks[t] += ch; } continue; }
+      flush(); toks.push(ch); continue;
+    }
+    if (closeP.indexOf(ch) >= 0 && !cur && toks.length && toks[toks.length - 1] !== ' ' && toks[toks.length - 1] !== '\n') { toks[toks.length - 1] += ch; continue; }
+    cur += ch;
+    if (ch === '-' && cur.length > 1) flush();
+  }
+  flush();
+  toks.forEach(function (t) {
+    if (t === '\n') { out.push(line); line = ''; w = 0; return; }
+    if (t === ' ') { if (line) { line += ' '; w += fs * 0.32; } return; }
+    var tw0 = tw(t, fs);
+    if (w + tw0 > maxW && line) { out.push(line.replace(/ +$/, '')); line = ''; w = 0; }
+    if (tw0 > maxW) { for (var k = 0; k < t.length; k++) { var cw = tw(t[k], fs); if (w + cw > maxW && line) { out.push(line); line = ''; w = 0; } line += t[k]; w += cw; } return; }
+    line += t; w += tw0;
+  });
+  if (line) out.push(line.replace(/ +$/, ''));
+  return out;
+}
+function attrs(o) { var s = ''; for (var k in o) { if (o[k] == null || o[k] === false) continue; s += ' ' + k.replace(/_/g, '-') + '="' + esc(o[k]) + '"'; } return s; }
+function tag(n, o, inner) { return '<' + n + attrs(o || {}) + (inner == null ? '/>' : '>' + inner + '</' + n + '>'); }
+function g(o, inner) { return tag('g', o, inner.join ? inner.join('') : inner); }
+function rect(x, y, w, h, o) { o = o || {}; o.x = +x.toFixed(2); o.y = +y.toFixed(2); o.width = +w.toFixed(2); o.height = +h.toFixed(2); return tag('rect', o); }
+function line(x1, y1, x2, y2, o) { o = o || {}; o.x1 = +x1.toFixed(2); o.y1 = +y1.toFixed(2); o.x2 = +x2.toFixed(2); o.y2 = +y2.toFixed(2); return tag('line', o); }
+function circle(cx, cy, r, o) { o = o || {}; o.cx = +cx.toFixed(2); o.cy = +cy.toFixed(2); o.r = r; return tag('circle', o); }
+function path(d, o) { o = o || {}; o.d = d; return tag('path', o); }
+/* text: lines can be a string or array; o.size, o.anchor, o.fill, o.weight, o.lh */
+function text(x, y, s, o) {
+  o = o || {}; var lines = Array.isArray(s) ? s : [s], fs = o.size || 12, lh = o.lh || fs * 1.35;
+  var a = { x: +x.toFixed(2), y: +y.toFixed(2), 'font-size': fs, fill: o.fill || PAL.ink, 'text-anchor': o.anchor || 'start',
+    'font-weight': o.weight, 'font-family': o.mono ? MONO : null, class: o.cls, 'dominant-baseline': o.baseline, opacity: o.opacity, transform: o.transform,
+    stroke: o.halo ? (o.halo === 1 ? PAL.paper : o.halo) : null, 'stroke-width': o.halo ? 3.5 : null, 'paint-order': o.halo ? 'stroke' : null, 'stroke-linejoin': o.halo ? 'round' : null };
+  var inner = lines.map(function (l, i) { return '<tspan x="' + (+x.toFixed(2)) + '" dy="' + (i === 0 ? 0 : lh) + '">' + esc(l) + '</tspan>'; }).join('');
+  return tag('text', a, inner);
+}
+function lin(d0, d1, r0, r1) { return function (v) { return r0 + (v - d0) / (d1 - d0) * (r1 - r0); }; }
+/* deterministic PRNG */
+function rng(seed) { var s = seed >>> 0; return function () { s = (s + 0x6D2B79F5) >>> 0; var t = s; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+/* hand-drawn feel: slightly wobbly rounded rectangle path */
+function wobRect(x, y, w, h, seed, amp) {
+  var r = rng(seed || 1), a = amp == null ? 1.2 : amp, j = function () { return (r() - 0.5) * 2 * a; };
+  var rad = Math.min(8, w / 4, h / 4);
+  var p = [[x + rad, y + j()], [x + w - rad, y + j()], [x + w + j(), y + rad], [x + w + j(), y + h - rad], [x + w - rad, y + h + j()], [x + rad, y + h + j()], [x + j(), y + h - rad], [x + j(), y + rad]];
+  return 'M' + p[0][0].toFixed(1) + ',' + p[0][1].toFixed(1) + ' L' + p[1][0].toFixed(1) + ',' + p[1][1].toFixed(1) +
+    ' Q' + (x + w).toFixed(1) + ',' + y.toFixed(1) + ' ' + p[2][0].toFixed(1) + ',' + p[2][1].toFixed(1) +
+    ' L' + p[3][0].toFixed(1) + ',' + p[3][1].toFixed(1) +
+    ' Q' + (x + w).toFixed(1) + ',' + (y + h).toFixed(1) + ' ' + p[4][0].toFixed(1) + ',' + p[4][1].toFixed(1) +
+    ' L' + p[5][0].toFixed(1) + ',' + p[5][1].toFixed(1) +
+    ' Q' + x.toFixed(1) + ',' + (y + h).toFixed(1) + ' ' + p[6][0].toFixed(1) + ',' + p[6][1].toFixed(1) +
+    ' L' + p[7][0].toFixed(1) + ',' + p[7][1].toFixed(1) +
+    ' Q' + x.toFixed(1) + ',' + y.toFixed(1) + ' ' + p[0][0].toFixed(1) + ',' + p[0][1].toFixed(1) + ' Z';
+}
+/* retro card: hard shadow + ink border; returns svg string */
+function card(x, y, w, h, o) {
+  o = o || {}; var seed = o.seed || 7;
+  var d = wobRect(x, y, w, h, seed, o.amp == null ? 0.8 : o.amp);
+  return (o.noShadow ? '' : path(wobRect(x + 4, y + 4, w, h, seed, o.amp == null ? 0.8 : o.amp), { fill: PAL.shadow })) +
+    path(d, { fill: o.fill || PAL.paper, stroke: o.stroke || PAL.ink, 'stroke-width': o.sw || 2, 'stroke-linejoin': 'round', class: o.cls, 'data-tip': o.tip, 'data-click': o.click, tabindex: o.tab ? 0 : null });
+}
+/* four-point star */
+function star4(cx, cy, r, o) {
+  var k = r * 0.28;
+  var d = 'M' + cx + ',' + (cy - r) + ' Q' + (cx + k) + ',' + (cy - k) + ' ' + (cx + r) + ',' + cy + ' Q' + (cx + k) + ',' + (cy + k) + ' ' + cx + ',' + (cy + r) +
+    ' Q' + (cx - k) + ',' + (cy + k) + ' ' + (cx - r) + ',' + cy + ' Q' + (cx - k) + ',' + (cy - k) + ' ' + cx + ',' + (cy - r) + ' Z';
+  return path(d, o || { fill: PAL.gold });
+}
+/* shared style block, prepended to every svg */
+const CSS = '<style>' +
+  '.fz{font-family:' + FONT + ';color:' + PAL.ink + '}' +
+  '.fz text{font-family:' + FONT + '}' +
+  '.fz .mono{font-family:' + MONO + '}' +
+  '.fz .hit{cursor:pointer;outline:none}.fz .hit .xh{opacity:0}.fz .hit:hover .xh,.fz .hit:focus .xh{opacity:1}' +
+  '.fz [data-tip]{cursor:help}.fz [data-click]{cursor:pointer}' +
+  '.fz .lnk{transition:opacity .15s}.fz .lnk:hover .v{stroke-width:3.2;opacity:1}.fz .dim{opacity:.1}' +
+  '.fz .gen{transition:opacity .2s}' +
+  '@media (forced-colors:active){.fz .tx{fill:CanvasText}}' +
+  '</style>';
+function svgOpen(w, h, title, desc, extra) {
+  /* optional per-figure viewBox padding (const PAD = {zh:[l,t,r,b], en:[...]} in the figure source): the canvas grows
+     so that content which overflowed the nominal w x h keeps a >=16px margin on every side (static PNG/SVG fix 11-21) */
+  var pd = [0, 0, 0, 0];
+  if (typeof PAD !== 'undefined' && PAD) { var lg = (typeof T !== 'undefined' && T.en && T.en.title === title) ? 'en' : 'zh'; pd = PAD[lg] || pd; }
+  var vx = -pd[0], vy = -pd[1], vw = w + pd[0] + pd[2], vh = h + pd[1] + pd[3];
+  return '<svg xmlns="http://www.w3.org/2000/svg" class="fz" viewBox="' + vx + ' ' + vy + ' ' + vw + ' ' + vh + '" width="' + vw + '" height="' + vh + '" role="img" aria-label="' + esc(title) + '"' + (extra || '') + '>' +
+    '<title>' + esc(title) + '</title><desc>' + esc(desc || '') + '</desc>' + CSS +
+    '<rect x="' + vx + '" y="' + vy + '" width="' + vw + '" height="' + vh + '" fill="' + PAL.paper + '"/>';
+}
+/* hatch patterns (texture = secondary channel; 45deg only) */
+function hatchDefs(id, color, bg) {
+  return '<pattern id="' + id + '" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="' + (bg || 'none') + '"/><line x1="0" y1="0" x2="0" y2="7" stroke="' + color + '" stroke-width="3"/></pattern>';
+}
+/* y/x axes helpers. ticks: [{v,label}] */
+function gridY(sy, ticks, x0, x1, fmt) {
+  return ticks.map(function (t) {
+    var y = sy(t.v); return line(x0, y, x1, y, { stroke: PAL.grid, 'stroke-width': 1 }) + text(x0 - 8, y + 4, t.label != null ? t.label : String(t.v), { anchor: 'end', size: 11, fill: PAL.muted });
+  }).join('');
+}
+/* tooltip-row helpers for FIG.tip(): rows = [{c:color,k:label,v:value}] */
+function trow(c, k, v) { return { c: c, k: k, v: v }; }
+/* generic title strip inside svg (used for static export) */
+function titleStrip(w, lang, idPrefix) {
+  var ttl = tr(lang, 'title'), sub = tr(lang, 'caption');
+  return '';
+}
+/* hours-since helper for date axes (09-13 00:00 = 0) */
+function dayLabel(d0, i) { var dd = d0 + i; return '09-' + (dd < 10 ? '0' : '') + dd; }
+/* cumulative normal pdf/cdf for F6 */
+function normCdf(x) { var t = 1 / (1 + 0.2316419 * Math.abs(x)); var d = 0.3989423 * Math.exp(-x * x / 2); var p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274)))); return x > 0 ? 1 - p : p; }
+
+</script>
+<script>
+
+/* E[max of N standard normals] by numerical integration of x*N*phi(x)*Phi(x)^(N-1) */
+const EMAX_CACHE = {};
+function emaxExact(N) {
+  if (N <= 1) return 0; if (EMAX_CACHE[N]) return EMAX_CACHE[N];
+  var s = 0, h = 0.01, x;
+  for (x = -9; x <= 9; x += h) { s += x * N * Math.exp(-x * x / 2) / 2.5066282746 * Math.pow(normCdf(x), N - 1) * h; }
+  return (EMAX_CACHE[N] = s);
+}
+function gauss(r) { var u = 1 - r(), v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+/* viewBox padding (px, [left,top,right,bottom]) so content keeps a 16px margin; see README "PNG 裁切修复" */
+const PAD = {"zh":[10,8,13,1],"en":[10,8,13,1]};
+const FIG = {
+  state: { lnN: Math.log(50), sigma: 1.0, seed: 1, hl: 'all' },
+  controls: [
+    { id: 'lnN', type: 'range', label: 'ctlN', min: 0.7, max: 6.9, step: 0.05, fmt: function (v) { return String(Math.round(Math.exp(v))); } },
+    { id: 'sigma', type: 'range', label: 'ctlSigma', min: 0.2, max: 3, step: 0.1, fmt: function (v) { return v.toFixed(1) + ' pp'; } },
+    { id: 'resample', type: 'action', label: 'ctlResample' },
+    { id: 'hl', type: 'buttons', label: 'hl', options: [{ v: 'all', k: 'hlAll' }, { v: 'var', k: 'hlVar' }, { v: 'bias', k: 'hlBias' }] }
+  ],
+  click: function (id, st) { if (id === 'resample') { st.seed++; return true; } if (id === 'hvar') { st.hl = st.hl === 'var' ? 'all' : 'var'; return true; } if (id === 'hbias') { st.hl = st.hl === 'bias' ? 'all' : 'bias'; return true; } return false; },
+  geo: function () { return { W: 1100, H: 640 }; },
+  sample: function (st) {
+    var N = Math.round(Math.exp(st.lnN)), r = rng(st.seed * 7919 + N * 31), pts = [], i, best = -1e9, bi = 0;
+    for (i = 0; i < N; i++) { var z = gauss(r) * st.sigma; pts.push({ y: z, jx: r() }); if (z > best) { best = z; bi = i; } }
+    var fr = gauss(r) * st.sigma; return { N: N, pts: pts, bi: bi, best: best, fresh: fr };
+  },
+  render: function (lang, st) {
+    var G = this.geo(), W = G.W, self = this, PH = lang === 'en' ? 695 : 590, s = svgOpen(W, G.H - 590 + PH, tr(lang, 'title'), tr(lang, 'caption'));
+    var dv = st.hl === 'bias' ? 0.28 : 1, db = st.hl === 'var' ? 0.28 : 1;
+    s += star4(W - 20, 16, 8, { fill: PAL.gold }) + star4(14, 20, 5, { fill: PAL.pink });
+    // ====================== left panel
+    var px = 8, py = 40, pw = 350, ph = PH;
+    s += '<g class="gen" opacity="' + dv + '" data-click="hvar" tabindex="0" role="button">' + path(wobRect(px + 4, py + 4, pw, ph, 3, 1.2), { fill: PAL.shadow }) + path(wobRect(px, py, pw, ph, 3, 1.2), { fill: PAL.paper, stroke: PAL.ink, 'stroke-width': 2 });
+    s += text(px + 14, py + 26, wrap(tr(lang, 'leftTitle'), pw - 28, 14.5), { size: 14.5, weight: 700, lh: 17 });
+    var smp = this.sample(st), N = smp.N, sg = st.sigma, ex = emaxExact(N) * sg, as = Math.sqrt(2 * Math.log(N)) * sg;
+    var sx0 = px + 62, sx1 = px + 172, sy0 = py + 84, sy1 = py + 272, lim = Math.max(2, Math.ceil(sg * 4.2 / (sg > 1.5 ? 2 : 1)) * (sg > 1.5 ? 2 : 1)), sy = lin(-lim, lim, sy1, sy0), lend = px + 232, lcol = px + 240;
+    var tk = lim <= 4 ? [-4, -2, 0, 2, 4] : (lim <= 6 ? [-6, -3, 0, 3, 6] : [-lim, -lim / 2, 0, lim / 2, lim]);
+    tk.forEach(function (v) { if (Math.abs(v) > lim) return; s += line(sx0, sy(v), lend, sy(v), { stroke: v === 0 ? PAL.ink : PAL.grid, 'stroke-width': v === 0 ? 1.5 : 1, 'stroke-dasharray': v === 0 ? '5 3' : null }) + text(sx0 - 6, sy(v) + 4, (v > 0 ? '+' : '') + v, { anchor: 'end', size: 10.5, fill: PAL.muted }); });
+    s += text(px + 14, sy0 - 12, tr(lang, 'scoreAxis'), { size: 11, fill: PAL.muted });
+    var cl = function (v) { return Math.max(-lim * 0.97, Math.min(lim * 0.97, v)); };
+    var rad = N > 300 ? 1.8 : (N > 100 ? 2.4 : 3.2);
+    smp.pts.forEach(function (d, i) { if (i === smp.bi) return; s += circle(sx0 + 8 + d.jx * (sx1 - sx0 - 16), sy(cl(d.y)), rad, { fill: PAL.c1, opacity: 0.6 }); });
+    // expected lines with de-overlapped labels on the right
+    s += line(sx0, sy(ex), lend, sy(ex), { stroke: PAL.alert, 'stroke-width': 2 }) + line(sx0, sy(as), lend, sy(as), { stroke: PAL.gray, 'stroke-width': 1.5, 'stroke-dasharray': '5 3' });
+    var labs = [[sy(as), tr(lang, 'eAsymS') + ' +' + as.toFixed(2), PAL.muted], [sy(ex), tr(lang, 'eExactS') + ' +' + ex.toFixed(2), PAL.ink], [sy(0), tr(lang, 'truthS') + ' 0', PAL.ink]].sort(function (p, q) { return p[0] - q[0]; });
+    for (var li = 1; li < labs.length; li++) if (labs[li][0] - labs[li - 1][0] < 15) labs[li][0] = labs[li - 1][0] + 15;
+    labs.forEach(function (l) { s += text(lcol, l[0] + 4, l[1], { size: 11, fill: l[2] }); });
+    // winner and re-evaluation
+    var wy = cl(smp.best), wx = sx0 + 8 + smp.pts[smp.bi].jx * (sx1 - sx0 - 16), fx = sx1 + 36, fy = cl(smp.fresh);
+    s += line(wx, sy(wy), fx, sy(fy), { stroke: PAL.alert, 'stroke-width': 1.4, 'stroke-dasharray': '3 3' });
+    s += circle(wx, sy(wy), 6, { fill: PAL.alert, stroke: PAL.paper, 'stroke-width': 2 }) + circle(fx, sy(fy), 6, { fill: PAL.paper, stroke: PAL.alert, 'stroke-width': 2.4 });
+    s += text(fx, sy(fy) + 20, tr(lang, 'fresh'), { anchor: 'middle', size: 11, weight: 700, halo: 1 }) + text(wx, sy(wy) - 10, tr(lang, 'winner'), { anchor: 'middle', size: 11, weight: 700, halo: 1 });
+    s += text(px + 14, sy1 + 26, tr(lang, 'pickScore', { a: smp.best.toFixed(1) }) + '    ' + tr(lang, 'freshScore', { b: (smp.fresh >= 0 ? '+' : '') + smp.fresh.toFixed(1) }), { size: 12, weight: 700 });
+    // inset: E[max]/sigma vs N
+    var ix0 = px + 48, ix1 = px + pw - 20, iy0 = py + 354, iy1 = py + 452, lx = lin(Math.log(2), Math.log(1000), ix0, ix1), ly = lin(0, 4, iy1, iy0);
+    s += text(px + 14, iy0 - 20, tr(lang, 'insetTitle'), { size: 12, weight: 700 });
+    [0, 1, 2, 3, 4].forEach(function (v) { s += line(ix0, ly(v), ix1, ly(v), { stroke: PAL.grid }) + text(ix0 - 6, ly(v) + 4, String(v), { anchor: 'end', size: 10.5, fill: PAL.muted }); });
+    s += line(ix0, iy1, ix1, iy1, { stroke: PAL.axis });
+    [2, 10, 100, 1000].forEach(function (v) { s += line(lx(Math.log(v)), iy1, lx(Math.log(v)), iy1 + 4, { stroke: PAL.axis }) + text(lx(Math.log(v)), iy1 + 17, String(v), { anchor: 'middle', size: 10.5, fill: PAL.muted }); });
+    var d1 = '', d2 = '', k; for (k = 0; k <= 40; k++) { var nn = Math.exp(Math.log(2) + (Math.log(1000) - Math.log(2)) * k / 40); d1 += (k ? 'L' : 'M') + lx(Math.log(nn)).toFixed(1) + ',' + ly(emaxExact(Math.round(nn))).toFixed(1) + ' '; d2 += (k ? 'L' : 'M') + lx(Math.log(nn)).toFixed(1) + ',' + ly(Math.sqrt(2 * Math.log(nn))).toFixed(1) + ' '; }
+    s += path(d2, { fill: 'none', stroke: PAL.gray, 'stroke-width': 2, 'stroke-dasharray': '5 3' }) + path(d1, { fill: 'none', stroke: PAL.alert, 'stroke-width': 2.2 });
+    s += line(lx(Math.log(N)), iy0, lx(Math.log(N)), iy1, { stroke: PAL.ink, 'stroke-width': 1.2 }) + circle(lx(Math.log(N)), ly(emaxExact(N)), 5, { fill: PAL.alert, stroke: PAL.paper, 'stroke-width': 2 }) + circle(lx(Math.log(N)), ly(Math.sqrt(2 * Math.log(N))), 4.5, { fill: PAL.gray, stroke: PAL.paper, 'stroke-width': 2 });
+    s += text(ix1, iy1 + 33, tr(lang, 'insetN'), { anchor: 'end', size: 10.5, fill: PAL.muted });
+    s += text(px + 14, py + ph - 72, wrap(tr(lang, 'readout', { n: N, s: sg.toFixed(1), e: ex.toFixed(2), a: as.toFixed(2) }), pw - 28, 12), { size: 12, weight: 700, lh: 15 });
+    s += text(px + 14, py + ph - 30, wrap(tr(lang, 'formula'), pw - 28, 11), { size: 11, fill: PAL.muted, lh: 13 });
+    s += '</g>';
+    // ====================== middle panel (key points)
+    var mx = px + pw + 14, mw = 342;
+    s += path(wobRect(mx + 4, py + 4, mw, ph, 4, 1.2), { fill: PAL.shadow }) + path(wobRect(mx, py, mw, ph, 4, 1.2), { fill: PAL.paper, stroke: PAL.ink, 'stroke-width': 2 });
+    s += text(mx + 14, py + 26, tr(lang, 'midTitle'), { size: 14.5, weight: 700 });
+    var my = py + 44, cards = [['m1', PAL.c1, ['a', 'b', 'c'], 1], ['m2', PAL.c3, ['a', 'b', 'c'], 2], ['m3', PAL.gray, ['a', 'b'], 0]];
+    cards.forEach(function (c) {
+      var hl = (c[3] === 1 && st.hl === 'var') || (c[3] === 2 && st.hl === 'bias');
+      var lines = []; c[2].forEach(function (k) { lines.push(wrap(tr(lang, c[0] + k), 296, lang === 'en' ? 11.5 : 12.5)); });
+      var hh = 42 + lines.reduce(function (a, l) { return a + l.length * (lang === 'en' ? 14.5 : 17) + 9; }, 0);
+      s += '<g' + (c[3] ? ' data-click="' + (c[3] === 1 ? 'hvar' : 'hbias') + '" tabindex="0" role="button"' : '') + '>' + path(wobRect(mx + 10, my, mw - 20, hh, 50 + c[3], 1), { fill: c[1], 'fill-opacity': hl ? 0.28 : 0.12, stroke: c[1], 'stroke-width': hl ? 3 : 2 });
+      s += text(mx + 22, my + 25, tr(lang, c[0] + 't'), { size: 14, weight: 700 });
+      var yy = my + 46; lines.forEach(function (l) { s += circle(mx + 22, yy - 4.5, 3, { fill: c[1] }) + text(mx + 30, yy, l, { size: lang === 'en' ? 11.5 : 12.5, lh: lang === 'en' ? 14.5 : 17 }); yy += l.length * (lang === 'en' ? 14.5 : 17) + 9; });
+      s += '</g>'; my += hh + 12;
+    });
+    s += text(mx + 14, my + 18, wrap(tr(lang, 'stack'), mw - 28, 13), { size: 13, weight: 700, lh: 17 });
+    // ====================== right panel
+    var rx = mx + mw + 14, rw = W - rx - 8;
+    s += '<g class="gen" opacity="' + db + '" data-click="hbias" tabindex="0" role="button">' + path(wobRect(rx + 4, py + 4, rw, ph, 6, 1.2), { fill: PAL.shadow }) + path(wobRect(rx, py, rw, ph, 6, 1.2), { fill: PAL.paper, stroke: PAL.ink, 'stroke-width': 2 });
+    s += text(rx + 14, py + 26, wrap(tr(lang, 'rightTitle'), rw - 28, 14.5), { size: 14.5, weight: 700, lh: 17 });
+    var bx = rx + 14, bw = rw - 28, byy = py + 52, CK = PAL.c3, VAR = [PAL.c4, PAL.gray, PAL.c1, PAL.orange, PAL.alert, '#7a5bb5'];
+    // opponent dots: inside = (almost) one colour; outside = many colours
+    var nd = 14, sp = bw / nd;
+    [['popIn', 0], ['popOut', 1]].forEach(function (e, k) {
+      var y = byy + k * 56; s += text(bx, y + 12, tr(lang, e[0]), { size: 12.5, weight: 700 });
+      for (var q = 0; q < nd; q++) { var col = e[1] === 0 ? (q === 9 ? PAL.gray : CK) : [CK, PAL.c4, PAL.gray, PAL.c1, PAL.orange, CK, '#7a5bb5', PAL.alert, PAL.c1, PAL.c4, PAL.gray, '#7a5bb5', PAL.orange, PAL.c1][q]; s += circle(bx + sp * q + sp / 2, y + 30, 8, { fill: col, stroke: PAL.paper, 'stroke-width': 1.5 }); }
+    });
+    var lgy = byy + 124;
+    s += circle(bx + 7, lgy - 4, 6, { fill: CK }) + text(bx + 20, lgy, tr(lang, 'lgCok'), { size: 11.5 });
+    var lg2 = bx + 20 + tw(tr(lang, 'lgCok'), 11.5) + 22;
+    [PAL.c4, PAL.c1, PAL.orange].forEach(function (c, j) { s += circle(lg2 + 6 + j * 13, lgy - 4, 5, { fill: c }); });
+    s += text(lg2 + 46, lgy, tr(lang, 'lgOth'), { size: 11.5 });
+    // one change, two rulers: no rank is drawn, only the contrast for the overflow guard
+    var hy = byy + 172;
+    s += line(bx, hy - 22, bx + bw, hy - 22, { stroke: PAL.axis, 'stroke-dasharray': '3 4' }) + text(bx, hy, tr(lang, 'rankHead'), { size: 12.5, weight: 700 });
+    var cw = 150, ch = 70, ty = hy + 24, lxx = bx, rxx = bx + bw - cw;
+    s += text(bx + bw / 2, ty + 4, tr(lang, 'chg'), { anchor: 'middle', size: 12.5, weight: 700 });
+    var cy = ty + 22;
+    [[lxx, 'rulerIn', 'gIn', PAL.gray, 0], [rxx, 'rulerOut', 'gOut', PAL.alert, 1]].forEach(function (e) {
+      var x = e[0], c = e[3];
+      s += rect(x, cy, cw, ch + 40, { rx: 8, fill: c, 'fill-opacity': 0.12, stroke: c, 'stroke-width': e[4] ? 2.6 : 1.8 });
+      s += text(x + cw / 2, cy + 22, wrap(tr(lang, e[1]), cw - 16, 12), { anchor: 'middle', size: 12, weight: 700, fill: PAL.muted, lh: 15 });
+      // gain bar: empty on the internal ruler, filled on the external one
+      var gy = cy + 58, gw = cw - 28;
+      s += rect(x + 14, gy, gw, 14, { rx: 7, fill: PAL.paper, stroke: PAL.ink, 'stroke-width': 1.4 });
+      if (e[4]) s += rect(x + 15.5, gy + 1.5, gw * 0.62, 11, { rx: 5.5, fill: PAL.alert });
+      s += text(x + cw / 2, gy + 40, wrap(tr(lang, e[2]), cw - 16, 12), { anchor: 'middle', size: 12, weight: 700, fill: e[4] ? PAL.alert : PAL.ink, lh: 15 });
+    });
+    var ay = cy + (ch + 40) / 2;
+    s += line(lxx + cw + 6, ay, rxx - 10, ay, { stroke: PAL.ink, 'stroke-width': 1.6, 'stroke-dasharray': '4 3' });
+    var fy = cy + ch + 40 + 28;
+    s += text(bx, fy, wrap(tr(lang, 'flip'), bw, 12.5), { size: 12.5, weight: 700, fill: PAL.alert, lh: 16 });
+    s += text(bx, fy + 50, wrap(tr(lang, 'eloNote'), bw, 11), { size: 11, fill: PAL.muted, lh: 13 });
+    s += '</g>';
+    return s + '</svg>';
+  },
+  table: function (lang, st) {
+    var smp = this.sample(st), N = smp.N, ex = emaxExact(N) * st.sigma, as = Math.sqrt(2 * Math.log(N)) * st.sigma;
+    return { head: tr(lang, 'th'), rows: [['N', N], ['sigma (pp)', st.sigma.toFixed(1)], [tr(lang, 'eExact'), ex.toFixed(2)], [tr(lang, 'eAsym'), as.toFixed(2)], [tr(lang, 'winner'), smp.best.toFixed(1)], [tr(lang, 'fresh'), smp.fresh.toFixed(1)],
+    [tr(lang, 'rulerIn'), tr(lang, 'gIn')], [tr(lang, 'rulerOut'), tr(lang, 'gOut')]] };
+  }
+};
+
+</script>
+<script>
+/* boot.js - generic page runtime: language toggle, controls, tooltip, click handling, table view.
+   Language: default zh; ?lang=en in URL, localStorage('fig-lang'), or window.postMessage({type:'fig-lang',lang:'en'}) from the host page. */
+(function () {
+  var FIGID = 'F7';
+  var st = JSON.parse(JSON.stringify(FIG.state || {}));
+  var lang = 'zh';
+  try { var q = /[?&]lang=(zh|en)/.exec(location.search); if (q) lang = q[1]; else if (localStorage.getItem('fig-lang')) lang = localStorage.getItem('fig-lang'); } catch (e) { }
+  var $ = function (id) { return document.getElementById(id); };
+  var mount = $('mount'), tipEl = $('tip');
+  if (FIG.init) FIG.init();
+
+  function setText(el, s) { el.textContent = s; }
+  function buildControls() {
+    var box = $('ctl'); box.textContent = '';
+    (FIG.controls || []).forEach(function (c) {
+      var lab = document.createElement('label'); lab.appendChild(document.createTextNode(tr(lang, c.label)));
+      if (c.type === 'select') {
+        var s = document.createElement('select');
+        c.options.forEach(function (o) { var op = document.createElement('option'); op.value = o.v; op.textContent = o.k ? tr(lang, o.k) : o.text; if (String(st[c.id]) === String(o.v)) op.selected = true; s.appendChild(op); });
+        s.addEventListener('change', function () { st[c.id] = s.value; draw(); });
+        lab.appendChild(s);
+      } else if (c.type === 'buttons') {
+        var gp = document.createElement('span'); gp.className = 'grp';
+        c.options.forEach(function (o) {
+          var b = document.createElement('button'); b.className = 'btn'; b.type = 'button'; b.textContent = o.k ? tr(lang, o.k) : o.text;
+          b.setAttribute('aria-pressed', String(st[c.id]) === String(o.v));
+          b.addEventListener('click', function () { st[c.id] = o.v; buildControls(); draw(); });
+          gp.appendChild(b);
+        });
+        lab.appendChild(gp);
+      } else if (c.type === 'range') {
+        var r = document.createElement('input'); r.type = 'range'; r.min = c.min; r.max = c.max; r.step = c.step; r.value = st[c.id];
+        var v = document.createElement('span'); v.className = 'val'; v.textContent = c.fmt ? c.fmt(st[c.id]) : st[c.id];
+        r.addEventListener('input', function () { st[c.id] = +r.value; v.textContent = c.fmt ? c.fmt(st[c.id]) : st[c.id]; draw(); });
+        lab.appendChild(r); lab.appendChild(v);
+      } else if (c.type === 'action') {
+        lab.removeChild(lab.firstChild);
+        var ab = document.createElement('button'); ab.className = 'btn act'; ab.type = 'button'; ab.textContent = tr(lang, c.label);
+        ab.addEventListener('click', function () { if (FIG.click(c.id, st)) draw(); });
+        lab.appendChild(ab);
+      }
+      box.appendChild(lab);
+    });
+  }
+  function buildTable() {
+    var t = FIG.table ? FIG.table(lang, st) : null, host = $('tbl'); host.textContent = '';
+    if (!t) return;
+    var tb = document.createElement('table'), tr0 = document.createElement('tr');
+    t.head.forEach(function (h) { var th = document.createElement('th'); th.textContent = h; tr0.appendChild(th); }); tb.appendChild(tr0);
+    t.rows.forEach(function (r) { var tr1 = document.createElement('tr'); r.forEach(function (c) { var td = document.createElement('td'); td.textContent = c == null ? '' : c; tr1.appendChild(td); }); tb.appendChild(tr1); });
+    host.appendChild(tb);
+  }
+  function draw() {
+    mount.innerHTML = FIG.render(lang, st);   // trusted: generated by FIG.render, all data strings pass through esc()
+    buildTable(); hideTip();
+    if (FIG.after) FIG.after(mount, lang, st, draw);
+  }
+  function full() {
+    document.documentElement.lang = lang;
+    setText($('figno'), FIGID); setText($('title'), tr(lang, 'title'));
+    setText($('cap'), tr(lang, 'caption')); setText($('src'), tr(lang, 'srcLabel') + tr(lang, 'src'));
+    setText($('tblsum'), tr(lang, 'tableView'));
+    $('bzh').setAttribute('aria-pressed', lang === 'zh'); $('ben').setAttribute('aria-pressed', lang === 'en');
+    document.title = FIGID + ' ' + tr(lang, 'title');
+    buildControls(); draw();
+  }
+  function setLang(l) { lang = l; try { localStorage.setItem('fig-lang', l); } catch (e) { } full(); }
+  $('bzh').addEventListener('click', function () { setLang('zh'); });
+  $('ben').addEventListener('click', function () { setLang('en'); });
+  window.addEventListener('message', function (e) { if (e.data && e.data.type === 'fig-lang' && (e.data.lang === 'zh' || e.data.lang === 'en')) setLang(e.data.lang); });
+
+  /* tooltip (all text via textContent) */
+  function hideTip() { tipEl.style.display = 'none'; }
+  function showTip(id, x, y) {
+    var d = FIG.tip ? FIG.tip(id, lang, st) : null; if (!d) { hideTip(); return; }
+    tipEl.textContent = '';
+    if (d.t) { var h = document.createElement('div'); h.className = 'tt'; h.textContent = d.t; tipEl.appendChild(h); }
+    (d.rows || []).forEach(function (r) {
+      var row = document.createElement('div'); row.className = 'r';
+      if (r.c) { var sw = document.createElement('span'); sw.className = 'sw'; sw.style.borderColor = r.c; row.appendChild(sw); }
+      if (r.v != null) { var v = document.createElement('span'); v.className = 'v'; v.textContent = r.v; row.appendChild(v); }
+      if (r.k) { var k = document.createElement('span'); k.className = 'k'; k.textContent = r.k; row.appendChild(k); }
+      tipEl.appendChild(row);
+    });
+    if (d.n) { var n = document.createElement('div'); n.className = 'n'; n.textContent = d.n; tipEl.appendChild(n); }
+    tipEl.style.display = 'block';
+    var w = tipEl.offsetWidth, h2 = tipEl.offsetHeight, px = x + 14, py = y + 14;
+    if (px + w > window.innerWidth - 4) px = Math.max(4, x - w - 14);
+    if (py + h2 > window.innerHeight - 4) py = Math.max(4, y - h2 - 14);
+    tipEl.style.left = px + 'px'; tipEl.style.top = py + 'px';
+  }
+  function tipTarget(e) { var t = e.target; while (t && t !== mount) { if (t.getAttribute && t.getAttribute('data-tip')) return t; t = t.parentNode; } return null; }
+  mount.addEventListener('pointermove', function (e) { var t = tipTarget(e); if (t) showTip(t.getAttribute('data-tip'), e.clientX, e.clientY); else hideTip(); });
+  mount.addEventListener('pointerleave', hideTip);
+  mount.addEventListener('focusin', function (e) { var t = tipTarget(e); if (t) { var r = t.getBoundingClientRect(); showTip(t.getAttribute('data-tip'), r.left + r.width / 2, r.top); } });
+  mount.addEventListener('focusout', hideTip);
+  mount.addEventListener('click', function (e) {
+    var t = e.target; while (t && t !== mount) { if (t.getAttribute && t.getAttribute('data-click')) break; t = t.parentNode; }
+    if (t && t !== mount && FIG.click && FIG.click(t.getAttribute('data-click'), st)) draw();
+  });
+  mount.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var t = e.target; if (t && t.getAttribute && t.getAttribute('data-click')) { e.preventDefault(); if (FIG.click && FIG.click(t.getAttribute('data-click'), st)) draw(); }
+  });
+  full();
+})();
+
+</script>
+</body></html>

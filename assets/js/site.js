@@ -367,9 +367,31 @@
     });
   }
 
+  /* ---------- 文章里的交互图 iframe：按内容高度自适应（同源） ---------- */
+
+  function initFigEmbeds() {
+    document.querySelectorAll('iframe.fig-embed').forEach((f) => {
+      const fit = () => {
+        try {
+          const d = f.contentDocument;
+          if (!d || !d.body || !d.body.childElementCount) return;
+          const h = Math.ceil(d.body.getBoundingClientRect().height);
+          if (h > 80) f.style.height = `${h}px`;
+          if (!f.fitObserver && window.ResizeObserver) {
+            f.fitObserver = new ResizeObserver(fit);
+            f.fitObserver.observe(d.body);
+          }
+        } catch {}
+      };
+      f.addEventListener('load', fit);
+      fit();
+    });
+  }
+
   function initPage() {
     initCategoryLinks();
     initInlineToc();
+    initFigEmbeds();
     initCounter();
     initClap();
     translateChrome();

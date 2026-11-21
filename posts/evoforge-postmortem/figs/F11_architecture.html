@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F11 - architecture of the three generations</title>
+<style>
+:root{--sky:#7fd6dc;--sky-deep:#3b9cba;--mint:#d3f6ef;--paper:#fffbe8;--cream:#fff3b8;--ink:#1d3f63;--muted:#557489;--link:#1a4fd6;--pink:#ef4c72;--orange:#f08a3a;--gold:#e3a700;--lcd:#34ff5a}
+*{box-sizing:border-box}html,body{margin:0;background:transparent}
+body{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;color:var(--ink);padding:6px 8px 10px}
+.card{background:var(--paper);border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(29,63,99,.22);border-radius:10px;overflow:hidden;max-width:1100px;margin:0 auto}
+.hd{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:2px solid var(--ink);
+ background-color:var(--cream);background-image:linear-gradient(rgba(29,63,99,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(29,63,99,.07) 1px,transparent 1px);background-size:14px 14px}
+.lcd{font-family:Consolas,"Courier New",monospace;font-weight:700;background:var(--ink);color:var(--lcd);padding:2px 8px;border-radius:4px;letter-spacing:1px;font-size:15px;text-shadow:0 0 4px rgba(52,255,90,.55)}
+.hd h1{font-size:16px;line-height:1.3;margin:0;flex:1;font-weight:700}
+.hd .star{color:var(--gold);font-size:14px}
+.lang{display:flex;border:2px solid var(--ink);border-radius:6px;overflow:hidden}
+.lang button{font:inherit;font-size:12px;border:0;background:var(--paper);color:var(--ink);padding:3px 9px;cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.ctl{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between;padding:10px 12px 4px}
+.tabs,.togs{display:flex;flex-wrap:wrap;gap:6px}
+button.tab,button.tog{font:inherit;font-size:13px;color:var(--ink);background:var(--cream);border:2px solid var(--ink);border-radius:6px;padding:4px 11px;cursor:pointer;box-shadow:2px 2px 0 rgba(29,63,99,.22)}
+button.tab[aria-selected=true]{color:var(--pink);font-weight:700;background:var(--paper);box-shadow:none;transform:translate(1px,1px)}
+button.tog{display:inline-flex;align-items:center;gap:6px;padding:3px 10px}
+button.tog i{display:inline-block;width:11px;height:11px;border-radius:3px;border:2px solid var(--ink)}
+button.tog[aria-pressed=true]{background:var(--paper);font-weight:700;box-shadow:none;transform:translate(1px,1px);outline:3px solid var(--c);outline-offset:1px}
+button.tog[aria-pressed=true] i{background:var(--c)}
+button:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.node:focus-visible .body{stroke:var(--link);stroke-width:4;stroke-dasharray:6 3}
+.main{display:flex;gap:12px;padding:8px 12px 10px;align-items:flex-start}
+.stage{flex:1 1 auto;min-width:0}
+.stage svg{width:100%;height:auto;display:block;margin:0 auto}
+.node{cursor:pointer;transition:opacity .15s;outline:none}
+.node:hover .body{stroke-width:3.4}
+.edge{transition:opacity .15s}
+.panel{flex:0 0 270px;border:2px solid var(--ink);border-radius:8px;background:#fff;box-shadow:3px 3px 0 rgba(29,63,99,.22);padding:10px 12px;font-size:13.5px;line-height:1.65;position:sticky;top:8px}
+.panel h2{font-size:15px;margin:0 0 2px}
+.panel .sub{color:var(--muted);font-size:12px;margin-bottom:6px}
+.panel .chips{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 8px;font-size:12px;align-items:center}
+.panel .chip{border:2px solid var(--c);border-radius:5px;padding:0 6px;background:var(--paper)}
+.panel .gname{font-weight:700;margin-bottom:4px}
+.panel .hintp{color:var(--muted);font-size:12.5px;margin-top:8px}
+details{border-top:2px dashed rgba(29,63,99,.35);padding:4px 14px 8px;font-size:12px}
+summary{cursor:pointer;color:var(--link)}
+table{border-collapse:collapse;margin-top:6px;font-size:12px;width:100%}
+th,td{border:1px solid rgba(29,63,99,.25);padding:2px 6px;text-align:left;vertical-align:top}
+th{background:var(--mint)}
+.tblwrap{max-height:300px;overflow:auto}
+@media (max-width:900px){.main{flex-direction:column;align-items:stretch}.stage{overflow-x:auto}.stage svg{min-width:660px}.panel{flex:none;width:100%;position:static}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+</style></head>
+<body>
+<div class="card" id="card">
+ <div class="hd"><span class="lcd" id="figno"></span><h1 id="title"></h1><span class="star">&#10022;</span>
+  <div class="lang" role="group" aria-label="language"><button id="bzh" aria-pressed="true">中</button><button id="ben" aria-pressed="false">EN</button></div></div>
+ <div class="ctl">
+  <div class="tabs" id="tabs" role="tablist"></div>
+  <div class="togs" id="togs" role="group"></div>
+ </div>
+ <div class="main">
+  <div class="stage" id="stage"></div>
+  <aside class="panel" id="panel" aria-live="polite"></aside>
+ </div>
+ <details><summary id="tblsum"></summary><div class="tblwrap" id="tbl"></div></details>
+</div>
+<script>
+const T={
+zh:{
+ title:'三代系统的架构：谁变异、谁选择、谁传播，人在哪里',
+ figno:'F2',
+ tabs:['第一代 arena','第二代 EvoForge','第三代 Codex 主控'],
+ tabsAria:'选择世代',
+ togAria:'高亮环节',
+ tog:{mut:'变异',sel:'选择',pro:'传播',hum:'人'},
+ togTip:{mut:'高亮变异环节',sel:'高亮选择环节',pro:'高亮传播环节',hum:'高亮人（作者）介入的节点与箭头'},
+ badge:{mut:'变',sel:'选',pro:'传',hum:'人'},
+ legend:{mut:'变异',sel:'选择',pro:'传播',hum:'人介入',solid:'实线：直接流动',dash:'虚线：间接或软影响'},
+ hint:'点击任一节点查看说明；上方开关高亮变异、选择、传播或人介入的环节。',
+ panelTag:'所属环节',
+ noTag:'无（支撑环节）',
+ tblSum:'文字表（与图等价）',tblNode:'节点',tblTags:'环节',tblDesc:'说明',tblEdge:'箭头',
+ gens:[
+ {name:'第一代 arena',
+  intro:'SB、Kag、AIIJC 各跑一套，结构相同；差异写在节点说明里。',
+  labels:{sub:'提交 / 回传',prod:'产物',imit:'看榜模仿',weak:'影响很小'},
+  nodes:{
+   human:{n:'人（作者）',s:'',short:'定比赛与原则，换模型、增删 lane',d:'定比赛、写设计原则“多采样而不是让他们达成共识”，换模型、增删 lane、注入公开方案，所有信息经 Codex 运维获得。'},
+   codex:{n:'Codex 运维',s:'',short:'起停、监视、汇报，作者认知都经它',d:'作者电脑上的 Codex 会话，负责起停、监视、汇报与执行指令；作者对系统的认知全部经过它。'},
+   sup:{n:'监督器',s:'',short:'失败退避重启，全局故障统一暂停',d:'让每条 lane 持续运行，失败后退避重启；出现全局故障时统一暂停。'},
+   lane:{n:'Lane × N',s:'GLM / Qwen / DeepSeek / Kimi',short:'常驻 Claude Code 代理，一条一个模型',d:'每条 lane 是一个常驻的 Claude Code 代理，有自己的仓库，由一个模型驱动。lane 名不等于模型，中途多次换模。'},
+   model:{n:'模型代理',s:'校内 GenAI',short:'共用一个本地代理和会过期的 JWT',d:'所有 lane 共用一个本地代理和一张会过期的 JWT；过期时全体停摆。'},
+   board:{n:'公告板',s:'',short:'可读写的 Markdown 板，渐成失败复盘',d:'所有 lane 可读写的 Markdown 公告板，后来加了 JSON 留言接口但几乎没人用；逐渐变成失败复盘的集合。'},
+   code:{n:'彼此的代码',s:'',short:'全可见，任何 lane 可读他人代码',d:'全可见，任何 lane 可读其他 lane 的代码。'},
+   ref:{n:'公开参考方案',s:'仅 Kag',short:'4 个公开 notebook 作固定对手',d:'4 个公开 notebook 作为固定对手进池，源码可读；最强的 COK 成为所有人复制的起点。'},
+   feat:{n:'预存特征包',s:'仅 SB',short:'启动前就有的特征与模型包',d:'启动前就有的特征与模型包，lane 新写的脚本大多直接调用它。'},
+   eval:{n:'本地评测',s:'',short:'筛选集+确认集、Elo 联赛或本地 CV',d:'SB：筛选集 + 确认集，预注册门槛，没过门写 NO-GO 并关闭方向；Kag：32 个 CPU worker 的 Elo 联赛，对手是种群自己；AIIJC：各 lane 自选协议的本地交叉验证。'},
+   lb:{n:'排行榜',s:'',short:'看榜后沿领先谱系模仿',d:'代理看榜后沿领先谱系模仿，这是这一代真正的选择算子。'},
+   credit:{n:'积分与奖励',s:'',short:'荣誉积分、小时奖励、擂台积分',d:'SB 荣誉积分只写在 prompt 里；Kag 每小时把一次强模型调用奖励给 Elo 最高、涨得最快的 lane，96% 给了 GLM；AIIJC 擂台积分只裁定过 3 次。都没有决定谁存活。'},
+   review:{n:'只读评审',s:'SB、AIIJC',short:'定期只读评审，只给建议',d:'定期运行的只读 Codex 评审，给出建议，不改变排名。'},
+   pub:{n:'外部公榜',s:'',short:'只有作者能提交和查看',d:'只有作者能提交和查看，结果由作者手动回传。'}
+  }},
+ {name:'第二代 EvoForge',
+  intro:'本代没有 lane 之间的传播，只有父代到子代的继承。',
+  labels:{sub:'提交 / 回传',seed:'手工种子',res:'评测结果',sel:'按分数选择',inh:'继承',cred:'credit 几乎不起作用'},
+  nodes:{
+   human:{n:'人（作者）',s:'',short:'提出遗传算法 + 合作博弈',d:'提出“遗传算法 + 合作博弈”，要求严防坍缩、鼓励多样性；SB 上手工注入了一个种子，此后所有冠军都是它的后代。'},
+   codex:{n:'Codex 运维',s:'',short:'起停、监视、汇报，作者认知都经它',d:'作者电脑上的 Codex 会话，负责起停、监视、汇报与执行指令；作者对系统的认知全部经过它。'},
+   daemon:{n:'守护进程',s:'+ 状态库',short:'调度全部比赛，状态写进 SQLite',d:'一个守护进程调度全部比赛，状态和审计写进 SQLite。'},
+   fam:{n:'idea 家族',s:'个体',short:'目标 16 个、下限 8 个，贴着下限',d:'个体是一个 idea 家族，目标 16 个、下限 8 个，实际长期贴着下限。'},
+   sched:{n:'代际调度',s:'',short:'分配开发名额，落后者休眠',d:'每代分配开发名额：5 个给有完整证据的、3 个受保护的探索、2 个挑战者；落后的家族休眠。名额由本地分数决定。'},
+   parent:{n:'父代选择',s:'',short:'父代是家族冠军，配偶按距离和分数',d:'父代是家族冠军；交叉的配偶按行为距离和分数挑选。子代胜过父代的比例很低，未见交叉的收益。'},
+   ep:{n:'Episode',s:'一次性开发者',short:'约 90 分钟，沙箱里只做一个改动',d:'每个 episode 是一个只活约 90 分钟的 Claude Code 代理，在沙箱里只做一个可证伪的改动；看不到排行榜，禁读参考方案和旧记录。'},
+   check:{n:'交付检查',s:'',short:'检查交付清单和证据',d:'检查交付清单和证据；有效交付率 GLM 22%、Qwen 15%、DeepSeek 10%、Kimi 1%，另有近一半 episode 刚启动就被拦截。'},
+   eval:{n:'评测',s:'',short:'固定面板上的分数，Kag 只有三档',d:'SB 先在小面板上筛，再上 384 个序列的固定大面板（被反复使用），后来改为两块面板取低值；Kag 只有对两个固定参考的配对胜负，分数只有三档。'},
+   broker:{n:'算力经纪',s:'+ Shapley credit',short:'只在算力排队拥塞时打破平局',d:'合作 credit 只在算力排队拥塞时打破平局，而算力几乎没拥塞过，实际触发约 0.5%。'},
+   quota:{n:'模型配额',s:'',short:'按可用性和故障率分份额',d:'四个模型按可用性和故障率分配份额，不看质量；派发近似均等。'},
+   pub:{n:'外部公榜',s:'',short:'只有作者能提交和查看',d:'只有作者能提交和查看，结果由作者手动回传。'}
+  }},
+ {name:'第三代 Codex 主控',
+  intro:'一个强主控加至多 4 个子代理；人只给方向。',
+  labels:{sub:'提交 / 回传'},
+  nodes:{
+   human:{n:'人（作者）',s:'',short:'给方向，转向来源隔离的验证',d:'给方向：“你没有发现你掉进死胡同了吗？”转向合成数据、两年混合数据、来源隔离的验证。'},
+   master:{n:'Codex 主控',s:'',short:'汇总结果，决定下一步',d:'一个强主控汇总结果、决定下一步。'},
+   sub:{n:'子代理 × ≤4',s:'',short:'执行具体实验',d:'执行具体实验。'},
+   feat:{n:'预存特征包与前代基线',s:'',short:'延续前代的模型族',d:'延续前代的模型族。'},
+   local:{n:'本地确认',s:'来源隔离',short:'本地分上涨，公榜停在约 63.4',d:'本地确认分持续上涨，但公榜停在约 63.4。'},
+   pub:{n:'外部公榜',s:'最好 63.39',short:'与队友原有的 63.43 持平',d:'最好 63.39，与队友原有的 63.43 持平。'}
+  }}
+ ]},
+en:{
+ title:'Architecture of the three generations: who mutates, selects and propagates, and where the human sits',
+ figno:'F2',
+ tabs:['Gen 1: arena','Gen 2: EvoForge','Gen 3: Codex lead'],
+ tabsAria:'Choose a generation',
+ togAria:'Highlight stage',
+ tog:{mut:'Mutation',sel:'Selection',pro:'Propagation',hum:'Human'},
+ togTip:{mut:'Highlight mutation stages',sel:'Highlight selection stages',pro:'Highlight propagation stages',hum:'Highlight nodes and arrows where the human (author) intervenes'},
+ badge:{mut:'M',sel:'S',pro:'P',hum:'H'},
+ legend:{mut:'mutation',sel:'selection',pro:'propagation',hum:'human',solid:'solid: direct flow',dash:'dashed: indirect / soft'},
+ hint:'Click any node for its description; the switches above highlight mutation, selection, propagation or human involvement.',
+ panelTag:'Stages',
+ noTag:'None (supporting part)',
+ tblSum:'Text table (equivalent to the figure)',tblNode:'Node',tblTags:'Stage',tblDesc:'Description',tblEdge:'Arrows',
+ gens:[
+ {name:'Gen 1: arena',
+  intro:'SB, Kag and AIIJC each ran one copy with the same structure; differences are given in the node descriptions.',
+  labels:{sub:'submit / return',prod:'outputs',imit:'imitate the board',weak:'very weak'},
+  nodes:{
+   human:{n:'Human (author)',s:'',short:'Sets contests and principles, swaps models',d:'Chooses the contests, writes the design principle “sample many, do not make them agree”, swaps models, adds or removes lanes and injects public solutions. All information arrives through Codex ops.'},
+   codex:{n:'Codex ops',s:'',short:'Start, watch, report; author’s only view',d:'A Codex session on the author’s computer. It starts and stops, monitors, reports and executes instructions; everything the author knows about the system passes through it.'},
+   sup:{n:'Supervisor',s:'',short:'Backoff restarts; global pause on shared failure',d:'Keeps every lane running and restarts failed ones with backoff; on a global failure it pauses everything together.'},
+   lane:{n:'Lane × N',s:'GLM / Qwen / DeepSeek / Kimi',short:'Resident Claude Code agents, one model each',d:'Each lane is a resident Claude Code agent with its own repository, driven by one model. A lane name is not a model: models were swapped several times mid-run.'},
+   model:{n:'Model proxy',s:'campus GenAI',short:'One proxy, one expiring JWT',d:'All lanes share one local proxy and one JWT that expires; when it expires, everything stops.'},
+   board:{n:'Bulletin board',s:'',short:'Shared Markdown board; became a failure log',d:'A Markdown board every lane can read and write. A JSON message interface was added later but almost nobody used it; the board gradually became a collection of failure post-mortems.'},
+   code:{n:'Each other’s code',s:'',short:'Fully visible to every lane',d:'Fully visible: any lane can read any other lane’s code.'},
+   ref:{n:'Public references',s:'Kag only',short:'4 public notebooks as fixed opponents',d:'Four public notebooks enter the pool as fixed opponents, with readable source; the strongest, COK, became the starting point everyone copied.'},
+   feat:{n:'Pre-built features',s:'SB only',short:'Features and models that pre-date launch',d:'A pack of features and models that existed before launch; most new lane scripts simply call it.'},
+   eval:{n:'Local evaluation',s:'',short:'Screen+confirm sets, Elo league or local CV',d:'SB: a screening set plus a confirmation set with pre-registered gates; a direction that fails writes NO-GO and is closed. Kag: an Elo league on 32 CPU workers whose opponents are the population itself. AIIJC: local cross-validation, with a protocol each lane chose.'},
+   lb:{n:'Leaderboard',s:'',short:'Agents imitate the leading lineage',d:'After looking at the board, agents imitate the leading lineage. This is the real selection operator of this generation.'},
+   credit:{n:'Points & rewards',s:'',short:'Honor points, hourly reward, arena points',d:'SB honor points exist only in the prompt. On Kag, each hour one strong-model call is rewarded to the lane with the highest and fastest-rising Elo; 96% went to GLM. AIIJC arena points ruled only 3 times. None of them decides who survives.'},
+   review:{n:'Read-only review',s:'SB, AIIJC',short:'Periodic review; advice only',d:'A periodic read-only Codex review that gives suggestions and does not change the ranking.'},
+   pub:{n:'Public leaderboard',s:'',short:'Only the author can submit and view',d:'Only the author can submit and view; results are fed back by hand.'}
+  }},
+ {name:'Gen 2: EvoForge',
+  intro:'This generation has no propagation between lanes, only inheritance from parent to child.',
+  labels:{sub:'submit / return',seed:'hand-made seed',res:'results',sel:'select by score',inh:'inherit',cred:'credit barely matters'},
+  nodes:{
+   human:{n:'Human (author)',s:'',short:'Proposed genetic algorithm + cooperative game',d:'Proposed “genetic algorithm + cooperative game”, demanding strict collapse prevention and diversity. On SB one seed was injected by hand, and every champion since is its descendant.'},
+   codex:{n:'Codex ops',s:'',short:'Start, watch, report; author’s only view',d:'A Codex session on the author’s computer. It starts and stops, monitors, reports and executes instructions; everything the author knows about the system passes through it.'},
+   daemon:{n:'Daemon',s:'+ state DB',short:'Schedules all contests; state in SQLite',d:'One daemon schedules all contests; state and audit logs go into SQLite.'},
+   fam:{n:'Idea family',s:'individual',short:'Target 16, floor 8, stuck at the floor',d:'An individual is an idea family. The target is 16 and the floor is 8; in practice the population sat at the floor for long stretches.'},
+   sched:{n:'Scheduler',s:'per generation',short:'Hands out dev slots; laggards go dormant',d:'Each generation allocates development slots: 5 to families with complete evidence, 3 to protected exploration, 2 to challengers; lagging families go dormant. Slots are decided by local scores.'},
+   parent:{n:'Parent selection',s:'',short:'Champion parent; mates by distance',d:'The parent is the family champion; crossover mates are picked by behavioral distance and score. Children rarely beat their parents, and no gain from crossover was seen.'},
+   ep:{n:'Episode',s:'one-shot developer',short:'About 90 minutes, one change in a sandbox',d:'Each episode is a Claude Code agent that lives about 90 minutes and makes one falsifiable change in a sandbox. It cannot see the leaderboard and may not read reference solutions or old records.'},
+   check:{n:'Delivery check',s:'',short:'Checks the delivery list and evidence',d:'Checks the delivery list and evidence. Valid delivery rates: GLM 22%, Qwen 15%, DeepSeek 10%, Kimi 1%; nearly half of all episodes were blocked right after launch.'},
+   eval:{n:'Evaluation',s:'',short:'Fixed-panel scores; Kag has only three levels',d:'SB screens on a small panel first, then on a fixed large panel of 384 sequences (used over and over), later changed to take the lower of two panels. Kag has only paired win/loss against two fixed references, so scores take only three levels.'},
+   broker:{n:'Compute broker',s:'+ Shapley credit',short:'Breaks ties only when the queue is congested',d:'Cooperative credit only breaks ties when the compute queue is congested, and compute was almost never congested: it actually fired about 0.5% of the time.'},
+   quota:{n:'Model quota',s:'',short:'Shares by availability and failure rate',d:'Shares among the four models are set by availability and failure rate, not quality; dispatch is roughly equal.'},
+   pub:{n:'Public leaderboard',s:'',short:'Only the author can submit and view',d:'Only the author can submit and view; results are fed back by hand.'}
+  }},
+ {name:'Gen 3: Codex lead',
+  intro:'One strong lead plus at most 4 subagents; the human only gives direction.',
+  labels:{sub:'submit / return'},
+  nodes:{
+   human:{n:'Human (author)',s:'',short:'Gives direction, toward source-isolated checks',d:'Gives direction: “Haven’t you noticed you walked into a dead end?” Turns the work toward synthetic data, two-year mixed data and source-isolated validation.'},
+   master:{n:'Codex lead',s:'',short:'Collects results, decides the next step',d:'One strong lead that collects results and decides the next step.'},
+   sub:{n:'Subagents × ≤4',s:'',short:'Run the concrete experiments',d:'Run the concrete experiments.'},
+   feat:{n:'Pre-built features',s:'+ prior baselines',short:'Carries on the prior model families',d:'Carries on the model families of earlier generations.'},
+   local:{n:'Local confirmation',s:'source-isolated',short:'Local score keeps rising; board stuck near 63.4',d:'The local confirmation score kept rising, but the public leaderboard stayed near 63.4.'},
+   pub:{n:'Public leaderboard',s:'best 63.39',short:'Level with the teammate’s original 63.43',d:'Best 63.39, level with the teammate’s original 63.43.'}
+  }}
+ ]}
+};
+
+// geometry. node: [x,y,w,h,tags]; edge a/b: [node, side, offset]; side l/r offset=dy from top, t/b offset=dx from left.
+const GENS=[
+{W:820,H:730,
+ nodes:{
+  human:[10,14,170,46,['hum'],{w:115}], pub:[270,14,190,46,[]],
+  codex:[10,124,170,46,['hum'],{w:115}], board:[300,124,190,46,['pro']], review:[600,124,200,46,[]],
+  sup:[10,262,170,46,[]], lane:[260,255,270,60,['mut'],{x:390,w:122,a:'middle'}], model:[610,262,190,46,[]],
+  feat:[10,380,170,46,[]], ref:[10,480,170,46,['pro']], code:[300,380,180,46,['pro']],
+  eval:[610,380,190,46,['sel'],{w:150}], lb:[610,485,190,46,['sel','pro']], credit:[610,590,190,46,['sel']]},
+ edges:[
+  {id:'hc',a:['human','b',120],b:['codex','t',120],bi:1,tags:['hum']},
+  {id:'hp',a:['human','r',23],b:['pub','l',23],bi:1,tags:['hum'],lab:['sub',225,30,'middle']},
+  {id:'cs',a:['codex','b',120],b:['sup','t',120],tags:['hum']},
+  {id:'sl',a:['sup','r',23],b:['lane','l',30]},
+  {id:'lc',a:['lane','t',20],b:['codex','r',23],via:[[280,147]],tags:['hum'],lab:['prod',230,141,'middle']},
+  {id:'lm',a:['lane','r',30],b:['model','l',23]},
+  {id:'lbd',a:['lane','t',200],b:['board','b',160],bi:1,tags:['pro']},
+  {id:'rv',a:['review','l',23],b:['board','r',23]},
+  {id:'lcode',a:['lane','b',60],b:['code','t',20],tags:['pro']},
+  {id:'codel',a:['code','t',160],b:['lane','b',200],tags:['pro']},
+  {id:'refl',a:['ref','r',23],b:['lane','b',15],via:[[275,503]],tags:['pro']},
+  {id:'featl',a:['feat','r',23],b:['lane','l',50],via:[[225,403],[225,305]]},
+  {id:'le',a:['lane','r',45],b:['eval','l',23],via:[[565,300],[565,403]],tags:['sel']},
+  {id:'elb',a:['eval','b',170],b:['lb','t',170],tags:['sel']},
+  {id:'lbl',a:['lb','l',23],b:['lane','b',260],via:[[520,508]],dash:1,tags:['sel','pro'],lab:['imit',528,470,'start']},
+  {id:'lbc',a:['lb','b',170],b:['credit','t',170],tags:['sel']},
+  {id:'cl',a:['credit','l',23],b:['lane','b',235],via:[[495,613]],dash:1,tags:['sel'],lab:['weak',489,590,'end']}
+ ]},
+{W:820,H:630,
+ nodes:{
+  codex:[10,14,150,46,['hum'],{x:40,w:105}], human:[215,14,190,46,['hum'],{x:240,w:115}], pub:[500,14,170,46,[]],
+  daemon:[260,118,190,46,[],{x:310,w:150}],
+  sched:[215,226,160,46,['sel'],{w:125}], parent:[440,226,160,46,['sel'],{w:120}],
+  fam:[215,350,160,46,['mut'],{w:125}], ep:[440,350,160,46,['mut'],{w:120}],
+  eval:[215,474,160,46,['sel']], check:[440,474,160,46,[]],
+  broker:[670,310,140,46,[]], quota:[670,410,140,46,[]]},
+ edges:[
+  {id:'hc',a:['human','l',23],b:['codex','r',23],bi:1,tags:['hum']},
+  {id:'hp',a:['human','r',23],b:['pub','l',23],bi:1,tags:['hum'],lab:['sub',452,30,'middle']},
+  {id:'hd',a:['human','b',150],b:['daemon','t',105],tags:['hum']},
+  {id:'hf',a:['human','b',13],b:['fam','l',23],via:[[228,90],[195,90],[195,373]],tags:['hum'],color:'hum',lab:['seed',189,250,'end']},
+  {id:'ec',a:['eval','l',23],b:['codex','b',20],via:[[30,497]],tags:['hum'],lab:['res',36,300,'start']},
+  {id:'ds',a:['daemon','b',40],b:['sched','t',85]},
+  {id:'sp',a:['sched','r',23],b:['parent','l',23],tags:['sel']},
+  {id:'pe',a:['parent','b',122],b:['ep','t',122],tags:['pro'],color:'pro',lab:['inh',572,316,'start']},
+  {id:'ecc',a:['ep','b',140],b:['check','t',140]},
+  {id:'cv',a:['check','l',23],b:['eval','r',23]},
+  {id:'ef',a:['eval','t',140],b:['fam','b',140],tags:['sel']},
+  {id:'fs',a:['fam','t',140],b:['sched','b',140],tags:['sel'],lab:['sel',361,316,'start']},
+  {id:'bp',a:['broker','l',23],b:['ep','r',14],via:[[635,333],[635,364]],dash:1,lab:['cred',640,302,'start']},
+  {id:'qe',a:['quota','l',23],b:['ep','r',32],via:[[620,433],[620,382]]}
+ ]},
+{W:780,H:410,
+ nodes:{
+  human:[20,30,200,46,['hum'],{w:140}], master:[300,30,200,46,['sel','pro']],
+  pub:[20,150,200,46,[]], sub:[300,150,200,46,['mut']],
+  feat:[20,270,200,46,[]], local:[300,270,200,46,['sel']]},
+ edges:[
+  {id:'hm',a:['human','r',23],b:['master','l',23],bi:1,tags:['hum']},
+  {id:'hp',a:['human','b',170],b:['pub','t',170],bi:1,tags:['hum'],lab:['sub',176,118,'start']},
+  {id:'ms',a:['master','b',170],b:['sub','t',170],tags:['pro']},
+  {id:'sl',a:['sub','b',170],b:['local','t',170]},
+  {id:'lm',a:['local','r',23],b:['master','r',23],via:[[560,293],[560,53]],tags:['sel']},
+  {id:'fs',a:['feat','r',23],b:['sub','l',23],via:[[260,293],[260,173]]}
+ ]}
+];
+
+const PAL={paper:'#fffbe8',ink:'#1d3f63',muted:'#557489',cream:'#fff3b8',mint:'#d3f6ef',hum:'#e3a700',mut:'#f08a3a',sel:'#ef4c72',pro:'#3b9cba'};
+const ORDER=['hum','mut','sel','pro'];
+const BADGE_ORDER=['mut','sel','pro','hum'];
+const FONT='"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif';
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function mix(c,d,t){const p=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));const a=p(c),b=p(d);return '#'+a.map((v,i)=>Math.round(v*t+b[i]*(1-t)).toString(16).padStart(2,'0')).join('');}
+function cw(ch,size){const c=ch.charCodeAt(0);if(c>=0x2E80)return size;if(/[A-Z]/.test(ch))return size*0.72;if(/[ilI.,;:'|!]/.test(ch))return size*0.3;if(ch===' ')return size*0.3;return size*0.6;}
+function tw(s,size,bold){let w=0;for(const ch of s)w+=cw(ch,size);return w*(bold?1.06:1);}
+function wrap(s,maxw,size){
+  const toks=s.match(/[⺀-￿]|[^\s⺀-￿]+\s*|\s+/g)||[];const lines=[];let cur='';
+  for(const t of toks){if(tw((cur+t).replace(/\s+$/,''),size)>maxw&&cur){lines.push(cur.replace(/\s+$/,''));cur=t.replace(/^\s+/,'');}else cur+=t;}
+  if(cur)lines.push(cur.replace(/\s+$/,''));return lines;
+}
+function tx(x,y,s,o){o=o||{};const size=o.size||12;
+  let a='<text x="'+x+'" y="'+y+'" font-size="'+size+'"'+(o.weight?' font-weight="'+o.weight+'"':'')+' fill="'+(o.fill||PAL.ink)+'"'+(o.anchor?' text-anchor="'+o.anchor+'"':'')+(o.halo?' paint-order="stroke" stroke="'+PAL.paper+'" stroke-width="4" stroke-linejoin="round"':'')+'>';
+  const ls=Array.isArray(s)?s:[s];
+  a+=ls.map((l,i)=>i?'<tspan x="'+x+'" dy="'+(o.lh||size*1.3)+'">'+esc(l)+'</tspan>':esc(l)).join('');
+  return a+'</text>';}
+function anchorPt(n,side,off){const [x,y,w,h]=n;
+  if(side==='l')return [x,y+off];if(side==='r')return [x+w,y+off];
+  if(side==='t')return [x+off,y];return [x+off,y+h];}
+function renderSvg(gi,lang,st){
+  st=st||{};const act=st.act||{};const G=GENS[gi],D=T[lang],GD=D.gens[gi];
+  const stat=!!st.stat;const top=stat?50:0;const H=G.H+top;
+  const any=ORDER.some(k=>act[k]);
+  const first=tags=>ORDER.find(k=>tags.indexOf(k)>=0&&act[k]);
+  const nodeLit={},endp={};
+  G.edges.forEach(e=>{if(any&&first(e.tags||[])){endp[e.a[0]]=1;endp[e.b[0]]=1;}});
+  let s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+G.W+' '+H+'" width="'+G.W+'" height="'+H+'" font-family=\''+FONT+'\' role="group" aria-label="'+esc(GD.name)+'">';
+  s+='<title>'+esc(D.title+' - '+GD.name)+'</title>';
+  s+='<defs>';
+  [['ink',PAL.ink],['hum',PAL.hum],['mut',PAL.mut],['sel',PAL.sel],['pro',PAL.pro]].forEach(m=>{
+    s+='<marker id="ah-'+m[0]+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0.5 0.8 L9.5 5 L0.5 9.2 Z" fill="'+m[1]+'"/></marker>';});
+  s+='</defs>';
+  if(stat)s+='<rect width="'+G.W+'" height="'+H+'" fill="'+PAL.paper+'"/>'+tx(12,24,D.figno+'  '+GD.name,{size:16,weight:700})+tx(12,42,GD.intro,{size:11,fill:PAL.muted});
+  s+='<g transform="translate(0,'+top+')">';
+  // edges
+  G.edges.forEach(e=>{
+    const na=G.nodes[e.a[0]],nb=G.nodes[e.b[0]];
+    const p0=anchorPt(na,e.a[1],e.a[2]),p1=anchorPt(nb,e.b[1],e.b[2]);
+    const pts=[p0].concat(e.via||[],[p1]);
+    const f=first(e.tags||[]);const lit=!!f;
+    const col=f?PAL[f]:(e.color?PAL[e.color]:PAL.ink);const mk=f||e.color||'ink';
+    const op=any?(lit?1:0.18):1;
+    s+='<g class="edge" data-edge="'+e.id+'" opacity="'+op+'">';
+    s+='<polyline points="'+pts.map(p=>p.join(',')).join(' ')+'" fill="none" stroke="'+col+'" stroke-width="'+(lit?3:2)+'"'+(e.dash?' stroke-dasharray="7 5"':'')+' stroke-linejoin="round" marker-end="url(#ah-'+mk+')"'+(e.bi?' marker-start="url(#ah-'+mk+')"':'')+'/>';
+    s+='</g>';
+  });
+  // nodes
+  const nodeIds=Object.keys(G.nodes);
+  nodeIds.forEach(id=>{
+    const [x,y,w,h,tags]=G.nodes[id];const nd=GD.nodes[id];
+    const f=first(tags);const lit=!any||!!f;
+    const selected=st.sel===id;
+    const op=!any?1:((f||selected)?1:(endp[id]?0.55:0.2));
+    const base=tags.indexOf('hum')>=0?PAL.cream:'#ffffff';
+    const fill=selected?PAL.mint:(f?mix(PAL[f],'#ffffff',0.2):base);
+    const stroke=f?PAL[f]:PAL.ink;
+    s+='<g class="node" data-node="'+id+'" opacity="'+op+'"'+(stat?'':' tabindex="0" role="button" aria-pressed="'+(selected?'true':'false')+'" aria-label="'+esc(nd.n+(nd.s?' '+nd.s:'')+' - '+nd.short)+'"')+'>';
+    s+='<rect x="'+(x+4)+'" y="'+(y+4)+'" width="'+w+'" height="'+h+'" rx="9" fill="rgba(29,63,99,.22)"/>';
+    s+='<rect class="body" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="9" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+(f||selected?3.2:2)+'"/>';
+    // name
+    let ns=13.5;while(ns>11&&tw(nd.n,ns,1)>w-22)ns-=0.5;
+    if(nd.s){s+=tx(x+w/2,y+20,nd.n,{size:ns,weight:700,anchor:'middle'});
+      let ss=10.5;while(ss>8.5&&tw(nd.s,ss)>w-14)ss-=0.5;
+      s+=tx(x+w/2,y+36,nd.s,{size:ss,fill:PAL.muted,anchor:'middle'});}
+    else s+=tx(x+w/2,y+h/2+5,nd.n,{size:ns,weight:700,anchor:'middle'});
+    // badges
+    const bt=BADGE_ORDER.filter(k=>tags.indexOf(k)>=0);
+    bt.forEach((k,i)=>{const bx=x+w-8-18*(bt.length-i)+0, by=y-8;
+      s+='<rect x="'+bx+'" y="'+by+'" width="16" height="15" rx="4" fill="'+PAL.paper+'" stroke="'+PAL[k]+'" stroke-width="'+(act[k]?2.6:1.8)+'"/>'+tx(bx+8,by+11.5,D.badge[k],{size:10,weight:700,anchor:'middle'});});
+    s+='<title>'+esc(nd.n+' - '+nd.d)+'</title>';
+    s+='</g>';
+  });
+  // notes (below nodes)
+  nodeIds.forEach(id=>{
+    const [x,y,w,h,_t,o]=G.nodes[id];const nd=GD.nodes[id];const ov=o||{};
+    const nx=ov.x!=null?ov.x:x+2;const mw=ov.w||Math.min(w+30,G.W-x-6);const ls=wrap(nd.short,mw,10.5);
+    const op=!any?1:((first(G.nodes[id][4])||st.sel===id)?1:(endp[id]?0.55:0.2));
+    s+='<g opacity="'+op+'">'+tx(nx,y+h+16,ls,{size:10.5,fill:PAL.muted,halo:1,lh:12.5,anchor:ov.a})+'</g>';
+  });
+  // edge labels
+  G.edges.forEach(e=>{if(!e.lab)return;const lit=!!first(e.tags||[]);const op=any?(lit?1:0.18):1;
+    s+='<g opacity="'+op+'">'+tx(e.lab[1],e.lab[2],GD.labels[e.lab[0]],{size:11,weight:700,anchor:e.lab[3],halo:1})+'</g>';});
+  s+='</g>';
+  // legend
+  let lx=12;const ly=H-22;
+  s+='<g>';
+  BADGE_ORDER.forEach(k=>{
+    s+='<rect x="'+lx+'" y="'+(ly-11)+'" width="16" height="15" rx="4" fill="'+PAL.paper+'" stroke="'+PAL[k]+'" stroke-width="2"/>'+tx(lx+8,ly+0.5,D.badge[k],{size:10,weight:700,anchor:'middle'});
+    const lab=D.legend[k];s+=tx(lx+22,ly+1,lab,{size:11});lx+=22+tw(lab,11)+16;});
+  s+='<line x1="'+lx+'" y1="'+(ly-3)+'" x2="'+(lx+32)+'" y2="'+(ly-3)+'" stroke="'+PAL.ink+'" stroke-width="2" marker-end="url(#ah-ink)"/>'+tx(lx+38,ly+1,D.legend.solid,{size:11});lx+=38+tw(D.legend.solid,11)+16;
+  s+='<line x1="'+lx+'" y1="'+(ly-3)+'" x2="'+(lx+32)+'" y2="'+(ly-3)+'" stroke="'+PAL.ink+'" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#ah-ink)"/>'+tx(lx+38,ly+1,D.legend.dash,{size:11});
+  s+='</g></svg>';
+  return s;
+}
+
+const BUILD_GW=[820,820,780];
+let lang=(new URLSearchParams(location.search).get('lang')==='en')?'en':'zh',gi=0,selId=null;const act={mut:false,sel:false,pro:false,hum:false};
+const $=id=>document.getElementById(id);
+const COL={mut:'#f08a3a',sel:'#ef4c72',pro:'#3b9cba',hum:'#e3a700'};
+function buildCtl(){const D=T[lang];
+  $('figno').textContent=D.figno;$('title').textContent=D.title;document.title=D.figno+' - '+D.title;document.documentElement.lang=lang;
+  $('tabs').setAttribute('aria-label',D.tabsAria);$('togs').setAttribute('aria-label',D.togAria);
+  $('tabs').innerHTML=D.tabs.map((t,i)=>'<button class="tab" role="tab" id="tab'+i+'" data-gi="'+i+'" aria-selected="'+(i===gi)+'" tabindex="'+(i===gi?0:-1)+'">'+t+'</button>').join('');
+  $('togs').innerHTML=['mut','sel','pro','hum'].map(k=>'<button class="tog" data-k="'+k+'" style="--c:'+COL[k]+'" aria-pressed="'+act[k]+'" title="'+D.togTip[k]+'"><i></i>'+D.tog[k]+'</button>').join('');
+  $('tblsum').textContent=D.tblSum;
+}
+function panel(){const D=T[lang],GD=D.gens[gi];let h='';
+  if(selId){const n=GD.nodes[selId],tags=GENS[gi].nodes[selId][4];
+    h+='<h2>'+esc(n.n)+'</h2>'+(n.s?'<div class="sub">'+esc(n.s)+'</div>':'');
+    h+='<div class="chips"><span>'+D.panelTag+'</span>'+(tags.length?['mut','sel','pro','hum'].filter(k=>tags.indexOf(k)>=0).map(k=>'<span class="chip" style="--c:'+COL[k]+'">'+D.tog[k]+'</span>').join(''):'<span style="color:var(--muted)">'+D.noTag+'</span>')+'</div>';
+    h+='<div>'+esc(n.d)+'</div>';
+  }else{h+='<div class="gname">'+esc(GD.name)+'</div><div>'+esc(GD.intro)+'</div><div class="hintp">'+esc(D.hint)+'</div>';}
+  $('panel').innerHTML=h;}
+function table(){const D=T[lang],GD=D.gens[gi],G=GENS[gi];
+  let h='<table><tr><th>'+D.tblNode+'</th><th>'+D.tblTags+'</th><th>'+D.tblDesc+'</th></tr>';
+  Object.keys(G.nodes).forEach(id=>{const n=GD.nodes[id];h+='<tr><td>'+esc(n.n+(n.s?' ('+n.s+')':''))+'</td><td>'+G.nodes[id][4].map(k=>D.tog[k]).join(' / ')+'</td><td>'+esc(n.d)+'</td></tr>';});
+  h+='</table><table><tr><th>'+D.tblEdge+'</th><th>'+D.tblTags+'</th></tr>';
+  G.edges.forEach(e=>{const a=GD.nodes[e.a[0]].n,b=GD.nodes[e.b[0]].n;const lab=e.lab?' ['+GD.labels[e.lab[0]]+']':'';
+    h+='<tr><td>'+esc(a+(e.bi?' <-> ':' -> ')+b+lab+(e.dash?' (--)':''))+'</td><td>'+(e.tags||[]).map(k=>D.tog[k]).join(' / ')+'</td></tr>';});
+  $('tbl').innerHTML=h+'</table>';}
+function draw(focusId){
+  const stage=$('stage');stage.innerHTML=renderSvg(gi,lang,{act:act,sel:selId});
+  const svg=stage.firstChild;svg.removeAttribute('width');svg.removeAttribute('height');svg.style.maxWidth=BUILD_GW[gi]+'px';
+  panel();
+  if(focusId){const el=stage.querySelector('[data-node="'+focusId+'"]');if(el)el.focus();}
+}
+function pick(id,kb){selId=(selId===id)?null:id;draw(kb?id:null);}
+$('stage').addEventListener('click',e=>{const n=e.target.closest('[data-node]');if(n)pick(n.dataset.node,false);});
+$('stage').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const n=e.target.closest('[data-node]');if(n){e.preventDefault();pick(n.dataset.node,true);}});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-gi]');if(!b)return;gi=+b.dataset.gi;selId=null;buildCtl();draw();table();$('tab'+gi).focus();});
+$('tabs').addEventListener('keydown',e=>{if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;gi=(gi+(e.key==='ArrowRight'?1:2))%3;selId=null;buildCtl();draw();table();$('tab'+gi).focus();});
+$('togs').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;const k=b.dataset.k;act[k]=!act[k];b.setAttribute('aria-pressed',act[k]);draw();});
+function setLang(l){lang=l;$('bzh').setAttribute('aria-pressed',l==='zh');$('ben').setAttribute('aria-pressed',l==='en');buildCtl();draw();table();}
+$('bzh').onclick=()=>setLang('zh');$('ben').onclick=()=>setLang('en');
+setLang(lang);
+
+</script>
+</body></html>

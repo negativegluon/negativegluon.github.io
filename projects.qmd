@@ -29,6 +29,8 @@ toc: false
 
 [Second Prize in the NSCSCC CPU design track. A three-person team built a multi-issue out-of-order core in SpinalHDL and booted Linux; I also built an MCP tool for automated FPGA deployment and hardware validation.]{.en}
 [龙芯杯 CPU 设计赛二等奖。三人团队用 SpinalHDL 写多发射乱序核并启动 Linux；我还做了自动化 FPGA 部署与硬件验证的 MCP 工具。]{.zh}
+
+[[Results ↗]{.en}[比赛结果 ↗]{.zh}](https://www.nscscc.com/?p=946){.retro-button}
 :::
 
 ::: {.project-card}
