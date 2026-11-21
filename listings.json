@@ -2,6 +2,7 @@
   {
     "listing": "/writing.html",
     "items": [
+      "/posts/evoforge-postmortem/index.html",
       "/posts/nemotron-postmortem/index.html",
       "/posts/hello-lunar-web/index.html"
     ]
@@ -9,6 +10,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/evoforge-postmortem/index.html",
       "/posts/nemotron-postmortem/index.html",
       "/posts/hello-lunar-web/index.html"
     ]
